@@ -1,13 +1,14 @@
-import './App.css';
+import NavBar from './components/NavBar';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
     <>
-      <div className="h-screen w-screen bg-gradient-to-l from-myBlue to-darkblue">
-        <p className="text-white">My App</p>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-          Button
-        </button>
+      <div className="flex h-screen w-screen bg-gradient-to-l from-myBlue to-darkblue text-white">
+        <NavBar />
+        <div className="flex-1 pt-8 pb-8 pr-16 pl-16 w-full">
+          <Outlet />
+        </div>
       </div>
     </>
   );

@@ -8,6 +8,15 @@ export default {
         myBlue: '#216c91',
         darkblue: '#181745'
       },
+      fontFamily: {
+        quickSand: ['QuickSand'],
+        quickSandBold: ['Quicksand-Bold'],
+        quickSandLight: ['Quicksand-Light'],
+        quickSandSemiBold: ['Quicksand-SemiBold'],
+      },
+      fontSize:{
+        '3xl': '2rem',
+      }
     },
   },
   plugins: [],

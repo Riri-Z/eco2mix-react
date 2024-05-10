@@ -20,3 +20,9 @@
     src: url('./assets/fonts/Quicksand/Quicksand-SemiBold.ttf') format('truetype');
   }
 }
+
+.m-active {
+  border-right-color: #58e1c1;
+  border-right-width: 0.2em;
+  border-right-style: solid;
+}

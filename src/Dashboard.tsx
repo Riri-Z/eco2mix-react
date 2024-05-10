@@ -1,7 +1,7 @@
 function Dashboard() {
   return (
     <>
-      <p>Dashboard</p>
+      <p className="font-quickSand">Dashboard</p>
     </>
   );
 }

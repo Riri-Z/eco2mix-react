@@ -15,6 +15,7 @@ export default {
         quickSandSemiBold: ['Quicksand-SemiBold'],
       },
       fontSize:{
+        'xs':'0.80rem',
         '3xl': '2rem',
       }
     },

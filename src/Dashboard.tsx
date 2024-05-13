@@ -1,15 +1,20 @@
-import { useDate } from './utils/context';
+import Chart from './components/Chart';
+import { useRouterContext } from './utils/context';
+import { ChartConfiguration } from './utils/types';
 
 function Dashboard() {
-  const { startDate, endDate } = useDate();
+  const { chartsConfig, loadingCharts } = useRouterContext();
 
   return (
-    <>
-      <p className="font-quickSand">Dashboard</p>
-
-      <p>start date {startDate}</p>
-      <p>end date {endDate}</p>
-    </>
+    <div className="flex ">
+      {loadingCharts ? (
+        <p>Loading</p>
+      ) : (
+        chartsConfig.map((chart: ChartConfiguration) => (
+          <Chart key={chart?.title?.text} config={chart} />
+        ))
+      )}
+    </div>
   );
 }
 

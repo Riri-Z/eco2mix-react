@@ -1,15 +1,7 @@
 import { Link } from 'react-router-dom';
+import { Ilink } from '../utils/types';
 
-interface linkType {
-  key: string;
-  path: string;
-  text: string;
-  logo: string;
-  active: boolean;
-  handleSelectedLink: (path: string) => void;
-}
-
-function LinkComponent({ path, text, logo, active, handleSelectedLink }: linkType) {
+function LinkComponent({ path, text, logo, active, handleSelectedLink }: Ilink) {
   return (
     <>
       <li className={`flex  items-center h-1/3 m-auto w-full  ${active && 'm-active'}`}>

@@ -2,17 +2,17 @@ import NavBar from './components/NavBar';
 import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { LIMIT_START_DATE_DATA } from './utils/constant';
-
-interface Error {
-  status: boolean;
-  text: null | string;
-}
+import dataProcessing from './utils/dataProcessing';
+import { ChartConfiguration } from './utils/types';
+import { IError } from './utils/types';
 
 export default function App() {
   const [lastDateAvailable, setDateLastDateAvailable] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const [error, setError] = useState<Error>({ status: false, text: null });
+  const [chartsConfig, setChartsConfig] = useState<ChartConfiguration[] | []>([]);
+  const [loadingCharts, setLoadingCharts] = useState(false);
+  const [error, setError] = useState<IError>({ status: false, text: null });
 
   useEffect(() => {
     async function getLastDateAvailable() {
@@ -33,9 +33,11 @@ export default function App() {
       });
       const result = await response.json();
       if (result.date != null) {
-        setDateLastDateAvailable(result.date);
-        setStartDate(result.date);
-        setEndDate(result.date);
+        const date = result.date;
+        setDateLastDateAvailable(date);
+        setStartDate(date);
+        setEndDate(date);
+        handleLoadData(date, date);
       }
     }
     try {
@@ -51,8 +53,62 @@ export default function App() {
     };
   }, []);
 
-  function handleLoadData() {
-    if (endDate && startDate && endDate < startDate) {
+  const handleReloadCharts = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    handleLoadData(startDate, endDate);
+  };
+
+  function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
+    /* Call API  pour récupérer les configurations des chartss */
+    async function getECO2mixRealTimeData() {
+      if (start != null && end != null) {
+        setLoadingCharts(true);
+        try {
+          const url = new URL(
+            import.meta.env.VITE_API_URL +
+              import.meta.env.VITE_API_ENDPOINT_ECO2MIX +
+              '/' +
+              import.meta.env.VITE_API_PATH_TOTAL_PRODUCTION
+          );
+          url.searchParams.append('startDate', start);
+          url.searchParams.append('endDate', end);
+          const headers = {
+            'Content-Type': 'application/json',
+          };
+
+          const method = 'GET';
+
+          const response = await fetch(url, {
+            method,
+            headers,
+          });
+
+          const result = await response.json();
+          if (Array.isArray(result.data) && result.data.length > 0) {
+            const {
+              chartOptionsEco2Mix,
+              chartOptionsElectricityConsumption,
+              chartOptionsCo2Rate,
+              configurationChartCommercialTrade,
+            } = dataProcessing(result.data);
+
+            setChartsConfig([
+              chartOptionsEco2Mix,
+              chartOptionsElectricityConsumption,
+              chartOptionsCo2Rate,
+              configurationChartCommercialTrade,
+            ]);
+          }
+
+          setLoadingCharts(false);
+        } catch (e) {
+          console.error(e);
+          setError({ status: true, text: 'IError with API' });
+        }
+      }
+    }
+
+    if (end && start && end < start) {
       const error = {
         status: true,
         text: 'Veuillez sélectionner une date de début antérieur à la date de fin',
@@ -61,6 +117,12 @@ export default function App() {
       setError(error);
     } else {
       setError({ status: false, text: null });
+
+      try {
+        getECO2mixRealTimeData();
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
@@ -99,13 +161,16 @@ export default function App() {
                 max={lastDateAvailable}
               />
 
-              <button className="bg-white text-black rounded-md w-32 ml-2" onClick={handleLoadData}>
+              <button
+                className="bg-white text-black rounded-md w-32 ml-2"
+                onClick={handleReloadCharts}
+              >
                 Appliquer
               </button>
             </div>
           )}
           {error.status && <p className="text-red-400">{error.text}</p>}
-          <Outlet context={{ startDate, endDate }} />
+          <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />
         </div>
       </div>
     </>

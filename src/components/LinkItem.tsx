@@ -6,7 +6,7 @@ interface linkType {
   text: string;
   logo: string;
   active: boolean;
-  handleSelectedLink: any;
+  handleSelectedLink: (path: string) => void;
 }
 
 function LinkComponent({ path, text, logo, active, handleSelectedLink }: linkType) {

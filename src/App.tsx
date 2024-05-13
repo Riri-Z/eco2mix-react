@@ -59,8 +59,9 @@ export default function App() {
       };
 
       setError(error);
+    } else {
+      setError({ status: false, text: null });
     }
-    setError({ status: false, text: null });
   }
 
   return (

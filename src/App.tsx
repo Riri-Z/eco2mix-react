@@ -128,10 +128,10 @@ export default function App() {
 
   return (
     <>
-      <div className="flex h-screen w-screen bg-gradient-to-l from-myBlue to-darkblue text-white">
+      <div className="flex w-screen bg-bg-dashboard text-white max-w-full">
         <NavBar />
-        <div className=" flex flex-1 flex-col pt-5 pb-8 pr-16 pl-8 w-full">
-          <h1 className="font-quickSandSemiBold text-3xl mb-11">Données éCO2mix nationales</h1>
+        <div className=" flex flex-1 flex-col gap-9 mt-4 pb-8 pr-8 pl-8 w-full">
+          <h1 className="font-quickSandSemiBold text-3xl ">Données éCO2mix nationales</h1>
 
           {lastDateAvailable && (
             <div className="flex gap-2">

@@ -14,7 +14,7 @@ function NavBar() {
   return (
     <>
       <div className="w-40 flex flex-col items-center bg-darkblue">
-        <h1 className="max-w-40 pt-5 pb-9 flex item-center justify-center cursor-pointer  items-center font-quickSandBold text-3xl">
+        <h1 className="max-w-40 h-20 flex item-center justify-center cursor-pointer  items-center font-quickSandBold text-3xl">
           eco2Mix
         </h1>
         <nav className="flex flex-col uppercase text-sm w-full">

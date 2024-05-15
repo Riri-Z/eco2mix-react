@@ -10,9 +10,11 @@ function Dashboard() {
       {loadingCharts ? (
         <p>Loading</p>
       ) : (
-        chartsConfig.map((chart: ChartConfiguration) => (
-          <Chart key={chart?.title?.text} config={chart} />
-        ))
+        <div className="flex flex-col w-full lg:grid grid-cols-2 gap-4 h-5/6 mb-2">
+          {chartsConfig.map((chart: ChartConfiguration) => (
+            <Chart key={chart?.title?.text} config={chart} />
+          ))}
+        </div>
       )}
     </div>
   );

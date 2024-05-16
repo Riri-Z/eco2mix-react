@@ -1,9 +1,9 @@
 import { IEco2mix, TradeItem } from './types';
-import { timeStampTotimeStampPlusTwo } from './converDate';
+import { isRangeLongerThanTwoWeeks, timeStampTotimeStampPlusTwo } from './dateUtils';
 import { format } from 'date-fns';
+import { EXPORT_MENU_CHARTS_FILTERED, EXPORT_MENU_CHARTS } from './constant';
 
-export default function dataProcessing(values: IEco2mix[]) {
-  console.debug(values);
+export default function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
     element.timeStamp = Date.parse(element.date_heure);
   }
@@ -106,6 +106,13 @@ export default function dataProcessing(values: IEco2mix[]) {
       verticalAlign: 'bottom',
     },
     series: seriesElictricityProduction,
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: isRangeLongerThanTwoWeeks(startDate, endDate),
+        },
+      },
+    },
     credits: {
       enabled: false,
     },
@@ -187,6 +194,13 @@ export default function dataProcessing(values: IEco2mix[]) {
       },
     },
     series: seriesElectricityConsumption,
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: isRangeLongerThanTwoWeeks(startDate, endDate),
+        },
+      },
+    },
   };
 
   /* Co2 rate chart */
@@ -235,6 +249,13 @@ export default function dataProcessing(values: IEco2mix[]) {
       enabled: false,
     },
     series: seriesCo2Rate,
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: isRangeLongerThanTwoWeeks(startDate, endDate),
+        },
+      },
+    },
   };
 
   /* Trade chart */
@@ -353,6 +374,13 @@ export default function dataProcessing(values: IEco2mix[]) {
       },
     },
     series: series,
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: isRangeLongerThanTwoWeeks(startDate, endDate),
+        },
+      },
+    },
   };
 
   return {

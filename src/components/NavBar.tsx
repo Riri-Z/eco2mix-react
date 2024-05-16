@@ -6,7 +6,11 @@ import { useState } from 'react';
 function NavBar() {
   const LINKS = [
     { path: 'dashboard', text: 'dashboard', logo: dashboardLogo },
-    { path: 'national-energy-consumption', text: 'Consommation', logo: electricalLogo },
+    {
+      path: 'national-energy-consumption',
+      text: 'Consommation',
+      logo: electricalLogo,
+    },
   ];
 
   const [active, setActive] = useState(LINKS[0].path);

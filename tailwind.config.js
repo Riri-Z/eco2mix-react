@@ -8,8 +8,11 @@ export default {
       }),
       colors: {
         turquoise: '#58e1c1',
-        myBlue: '#216c91',
+        lightBlue: '#216c91',
         darkblue: '#181745'
+      },
+      borderWidth: {
+        '20': '20px',
       },
       fontFamily: {
         quickSand: ['QuickSand'],

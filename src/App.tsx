@@ -12,7 +12,10 @@ export default function App() {
   const [endDate, setEndDate] = useState<string | null>(null);
   const [chartsConfig, setChartsConfig] = useState<ChartConfiguration[] | []>([]);
   const [loadingCharts, setLoadingCharts] = useState(false);
-  const [error, setError] = useState<IError>({ status: false, text: null });
+  const [error, setError] = useState<IError>({
+    status: false,
+    text: null,
+  });
 
   useEffect(() => {
     async function getLastDateAvailable() {
@@ -59,7 +62,8 @@ export default function App() {
   };
 
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
-    /* Call API  pour récupérer les configurations des chartss */
+    // Call Api to get all data needed for charts TODO in future, retreive only chart config to avoid  frontend compute
+
     async function getECO2mixRealTimeData() {
       if (start != null && end != null) {
         setLoadingCharts(true);
@@ -90,7 +94,7 @@ export default function App() {
               chartOptionsElectricityConsumption,
               chartOptionsCo2Rate,
               configurationChartCommercialTrade,
-            } = dataProcessing(result.data);
+            } = dataProcessing(result.data, startDate!, endDate!);
 
             setChartsConfig([
               chartOptionsEco2Mix,
@@ -128,9 +132,9 @@ export default function App() {
 
   return (
     <>
-      <div className="flex w-screen bg-bg-dashboard text-white max-w-full">
+      <div className="flex w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
         <NavBar />
-        <div className=" flex flex-1 flex-col gap-9 mt-4 pb-8 pr-8 pl-8 w-full">
+        <div className=" flex flex-1 flex-col gap-6 mt-4 pb-8 pr-8 pl-8 w-full">
           <h1 className="font-quickSandSemiBold text-3xl ">Données éCO2mix nationales</h1>
 
           {lastDateAvailable && (
@@ -165,7 +169,7 @@ export default function App() {
                 className="bg-white text-black rounded-md w-32 ml-2"
                 onClick={handleReloadCharts}
               >
-                Appliquer
+                Valider
               </button>
             </div>
           )}

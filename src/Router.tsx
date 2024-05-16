@@ -2,11 +2,12 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import ErrorPage from './error-page';
 import App from './App';
+import LoadingSpinner from './components/LoadingSpinner';
 
 const Router = createBrowserRouter([
   {
     path: '/',
-    element: <App></App>,
+    element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -19,7 +20,7 @@ const Router = createBrowserRouter([
       },
       {
         path: '/national-energy-consumption',
-        element: <div>national-map</div>,
+        element: <LoadingSpinner />,
       },
     ],
   },

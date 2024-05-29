@@ -26,3 +26,9 @@
   border-right-width: 0.2em;
   border-right-style: solid;
 }
+
+@media print {
+  .highcharts-tooltip {
+    display: none;
+  }
+}

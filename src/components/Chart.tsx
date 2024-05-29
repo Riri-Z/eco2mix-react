@@ -31,6 +31,18 @@ Highcharts.setOptions({
     downloadPDF: 'Télécharger au format PDF',
     downloadSVG: 'Télécharger au format SVG',
   },
+  plotOptions: {
+    series: {
+      states: {
+        hover: {
+          enabled: true,
+          halo: {
+            size: 0,
+          },
+        },
+      },
+    },
+  },
 });
 
 export default function Chart({ config }: ChartProps) {

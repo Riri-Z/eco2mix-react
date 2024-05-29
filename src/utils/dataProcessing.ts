@@ -1,12 +1,14 @@
 import { IEco2mix, TradeItem } from './types';
 import { isRangeLongerThanTwoWeeks, timeStampTotimeStampPlusTwo } from './dateUtils';
 import { format } from 'date-fns';
-import { EXPORT_MENU_CHARTS_FILTERED, EXPORT_MENU_CHARTS } from './constant';
 
 export default function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
     element.timeStamp = Date.parse(element.date_heure);
   }
+  // Sort data for HighChart.js performance
+  values.sort((a, b) => a.timeStamp - b.timeStamp);
+
   /* Mix energie chart */
   const seriesElictricityProduction = [
     {
@@ -100,6 +102,13 @@ export default function dataProcessing(values: IEco2mix[], startDate: string, en
       followPointer: false,
       split: true,
     },
+    plotOptions: {
+      area: {
+        marker: {
+          enabled: false,
+        },
+      },
+    },
     legend: {
       layout: 'horizontal',
       align: 'center',
@@ -186,6 +195,11 @@ export default function dataProcessing(values: IEco2mix[], startDate: string, en
       shared: true,
     },
     plotOptions: {
+      line: {
+        marker: {
+          enabled: false,
+        },
+      },
       series: {
         label: {
           connectorAllowed: false,
@@ -242,11 +256,17 @@ export default function dataProcessing(values: IEco2mix[], startDate: string, en
     tooltip: {
       xDateFormat: '%d-%m-%y %H:%M',
       followPointer: true,
-
       shared: true,
     },
     credits: {
       enabled: false,
+    },
+    plotOptions: {
+      line: {
+        marker: {
+          enabled: false,
+        },
+      },
     },
     series: seriesCo2Rate,
     exporting: {

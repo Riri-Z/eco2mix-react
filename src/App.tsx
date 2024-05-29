@@ -35,18 +35,23 @@ export default function App() {
         headers,
       });
       const result = await response.json();
-      if (result.date != null) {
-        const date = result.date;
-        setDateLastDateAvailable(date);
-        setStartDate(date);
-        setEndDate(date);
-        handleLoadData(date, date);
+      if (response.status != 200) {
+        setError({
+          status: true,
+          text: "Désolé, il semblerait qu'on ait un souci. veuillez réessayer plus tard ",
+        });
+      } else {
+        setDateLastDateAvailable(result);
+        setStartDate(result);
+        setEndDate(result);
+        handleLoadData(result, result);
       }
     }
     try {
       getLastDateAvailable();
     } catch (e) {
       console.error(e);
+      setError({ status: true, text: 'failed fetching' });
     }
 
     return () => {
@@ -63,7 +68,6 @@ export default function App() {
 
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
     // Call Api to get all data needed for charts TODO in future, retreive only chart config to avoid  frontend compute
-
     async function getECO2mixRealTimeData() {
       if (start != null && end != null) {
         setLoadingCharts(true);
@@ -88,13 +92,13 @@ export default function App() {
           });
 
           const result = await response.json();
-          if (Array.isArray(result.data) && result.data.length > 0) {
+          if (response.status === 200 && Array.isArray(result) && result.length > 0) {
             const {
               chartOptionsEco2Mix,
               chartOptionsElectricityConsumption,
               chartOptionsCo2Rate,
               configurationChartCommercialTrade,
-            } = dataProcessing(result.data, startDate!, endDate!);
+            } = dataProcessing(result, startDate!, endDate!);
 
             setChartsConfig([
               chartOptionsEco2Mix,
@@ -174,7 +178,9 @@ export default function App() {
             </div>
           )}
           {error.status && <p className="text-red-400">{error.text}</p>}
-          <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />
+          {!error.status && (
+            <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />
+          )}
         </div>
       </div>
     </>

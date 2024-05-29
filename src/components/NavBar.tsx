@@ -15,14 +15,22 @@ function NavBar() {
   ];
 
   const [active, setActive] = useState(LINKS[0].path);
+  const [displayMenu, setDisplayMenu] = useState(false);
+
+  const handleClickBurgerMenu = () => {
+    setDisplayMenu(!displayMenu);
+  };
+
+  const displayTab = displayMenu || window.innerWidth >= 768;
 
   return (
     <>
       <div className="md:w-40 flex flex-col md:items-center bg-darkblue">
-        <section className="flex flex-row items-center	 max-md:mt-2">
+        <section className="flex flex-row items-center h-20 ">
           <img
             className="h-5 pr-2 pl-4 mt-1 md:hidden"
             src={burgerMenuLogo}
+            onClick={handleClickBurgerMenu}
             alt="burgerMenuIcon logo"
           />
 
@@ -30,20 +38,22 @@ function NavBar() {
             eco2Mix
           </h1>
         </section>
-        <nav className="flex flex-row w-full justify-between md:flex-col uppercase text-sm md:w-full">
-          <ul className="flex w-full  md:flex-col align-middle md:h-32 ">
-            {LINKS.map((e) => (
-              <LinkComponent
-                key={e.text}
-                path={e.path}
-                text={e.text}
-                logo={e.logo}
-                active={e.path === active}
-                handleSelectedLink={setActive}
-              />
-            ))}
-          </ul>
-        </nav>
+        {displayTab && (
+          <nav className="flex flex-row w-full justify-between md:flex-col uppercase text-sm md:w-full">
+            <ul className="flex w-full  md:flex-col align-middle md:h-32 ">
+              {LINKS.map((e) => (
+                <LinkComponent
+                  key={e.text}
+                  path={e.path}
+                  text={e.text}
+                  logo={e.logo}
+                  active={e.path === active}
+                  handleSelectedLink={setActive}
+                />
+              ))}
+            </ul>
+          </nav>
+        )}
       </div>
     </>
   );

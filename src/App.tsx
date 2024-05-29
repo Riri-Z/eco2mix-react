@@ -138,16 +138,18 @@ export default function App() {
     <>
       <div className="flex flex-col md:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
         <NavBar />
-        <div className=" flex flex-1 flex-col gap-10 mt-4 pb-8 pr-8 pl-8 w-full">
-          <h1 className="font-quickSandSemiBold text-3xl ">Données éCO2mix nationales</h1>
+        <div className=" flex flex-1 flex-col gap-5 md:gap-10 mt-4 pb-8 pr-2 pl-2 md:pr-8 md:pl-8 w-full">
+          <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl md:text-left  md:text-3xl">
+            Données éCO2mix nationales
+          </h1>
 
           {lastDateAvailable && (
-            <div className="flex gap-2">
-              <label className="" htmlFor="start">
+            <div className="flex gap-2 justify-center align-middle md:justify-start">
+              <label className="text-sm flex items-center	 md:text-base" htmlFor="start">
                 Début :
               </label>
               <input
-                className="text-black rounded-md text-center w-28"
+                className="text-black rounded-md text-center w-28 md:text-base"
                 type="date"
                 id="start"
                 name="trip-start"
@@ -156,12 +158,14 @@ export default function App() {
                 min={LIMIT_START_DATE_DATA}
                 max={lastDateAvailable}
               />
-              <label htmlFor="start">Fin :</label>
+              <label className="text-sm flex items-center md:text-base" htmlFor="end">
+                Fin :
+              </label>
 
               <input
-                className="text-black rounded-md text-center w-28"
+                className="text-black rounded-md text-center w-28   md:text-base"
                 type="date"
-                id="start"
+                id="end"
                 name="trip-start"
                 onChange={(e) => setEndDate(e.target.value)}
                 value={endDate || ''}
@@ -170,7 +174,7 @@ export default function App() {
               />
 
               <button
-                className="bg-white text-black rounded-md w-32 ml-2"
+                className="bg-white text-black rounded-md w-14 sm:w-24 md:w-32 ml-2"
                 onClick={handleReloadCharts}
               >
                 Valider

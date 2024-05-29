@@ -13,7 +13,7 @@ function Dashboard() {
       ) : (
         <div className="flex flex-col gap-1">
           {chartsConfig.length > 0 && (
-            <p className="italic font-quickSandLight text-white text-xs">
+            <p className="italic text-center md:text-left font-quickSandLight text-white text-xs">
               * Si la période est supérieur à deux semaines, vous ne pourrez pas télécharger les
               formats suivants : PNG, JPEG, PDF, et SVG
             </p>

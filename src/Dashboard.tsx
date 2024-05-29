@@ -28,12 +28,4 @@ function Dashboard() {
     </>
   );
 }
-/*
-padding: 0;
-    margin: 0;
-    font-size: .7rem;
-    font-style: italic;
-    color: #f6f4ec;
-
-*/
 export default Dashboard;

@@ -136,9 +136,9 @@ export default function App() {
 
   return (
     <>
-      <div className="flex w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
+      <div className="flex flex-col md:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
         <NavBar />
-        <div className=" flex flex-1 flex-col gap-6 mt-4 pb-8 pr-8 pl-8 w-full">
+        <div className=" flex flex-1 flex-col gap-10 mt-4 pb-8 pr-8 pl-8 w-full">
           <h1 className="font-quickSandSemiBold text-3xl ">Données éCO2mix nationales</h1>
 
           {lastDateAvailable && (

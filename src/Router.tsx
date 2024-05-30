@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import ErrorPage from './error-page';
 import App from './App';
-import LoadingSpinner from './components/LoadingSpinner';
+import { Consumption } from './Consumption';
 
 const Router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ const Router = createBrowserRouter([
       },
       {
         path: '/national-energy-consumption',
-        element: <LoadingSpinner />,
+        element: <Consumption />,
       },
     ],
   },

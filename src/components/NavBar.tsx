@@ -9,7 +9,7 @@ function NavBar() {
     { path: 'dashboard', text: 'dashboard', logo: dashboardLogo },
     {
       path: 'national-energy-consumption',
-      text: 'Consommation',
+      text: 'Carte des Consommations',
       logo: electricalLogo,
     },
   ];
@@ -25,7 +25,7 @@ function NavBar() {
 
   return (
     <>
-      <div className="md:w-40 flex flex-col md:items-center bg-darkblue">
+      <div className="md:w-44 flex flex-col md:items-center bg-darkblue">
         <section className="flex flex-row items-center h-20 ">
           <img
             className="h-5 pr-2 pl-4 mt-1 md:hidden"

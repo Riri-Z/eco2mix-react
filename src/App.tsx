@@ -1,10 +1,10 @@
 import NavBar from './components/NavBar';
 import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { LIMIT_START_DATE_DATA } from './utils/constant';
 import dataProcessing from './utils/dataProcessing';
 import { ChartConfiguration } from './utils/types';
 import { IError } from './utils/types';
+import { SelectDate } from './components/SelectDate';
 
 export default function App() {
   const [lastDateAvailable, setDateLastDateAvailable] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export default function App() {
       if (response.status != 200) {
         setError({
           status: true,
-          text: "Désolé, il semblerait qu'on ait un souci. veuillez réessayer plus tard ",
+          text: 'Désolé, un souci est survenu. veuillez réessayer plus tard ',
         });
       } else {
         setDateLastDateAvailable(result);
@@ -60,11 +60,6 @@ export default function App() {
       setEndDate(null);
     };
   }, []);
-
-  const handleReloadCharts = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    handleLoadData(startDate, endDate);
-  };
 
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
     // Call Api to get all data needed for charts TODO in future, retreive only chart config to avoid  frontend compute
@@ -119,7 +114,7 @@ export default function App() {
     if (end && start && end < start) {
       const error = {
         status: true,
-        text: 'Veuillez sélectionner une date de début antérieur à la date de fin',
+        text: 'Attention, veuillez sélectionner une date de début antérieur à la date de fin',
       };
 
       setError(error);
@@ -144,7 +139,16 @@ export default function App() {
           </h1>
 
           {lastDateAvailable && (
-            <div className="flex gap-2 justify-center align-middle md:justify-start">
+            <SelectDate
+              lastDateAvailable={lastDateAvailable}
+              handleLoadData={handleLoadData}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+            />
+
+            /*     <div className="flex gap-2 justify-center align-middle md:justify-start">
               <label className="text-sm flex items-center	 md:text-base" htmlFor="start">
                 Début :
               </label>
@@ -179,7 +183,7 @@ export default function App() {
               >
                 Valider
               </button>
-            </div>
+            </div> */
           )}
           {error.status && <p className="text-red-400">{error.text}</p>}
           {!error.status && (

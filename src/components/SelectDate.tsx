@@ -67,9 +67,9 @@ export const SelectDate: FunctionComponent<Props> = ({
         id="start"
         name="trip-start"
         onChange={(e) => setStartDate(e.target.value)}
-        value={startDate || ''}
+        value={startDate ?? ''}
         min={LIMIT_START_DATE_DATA}
-        max={lastDateAvailable ? lastDateAvailable : ''}
+        max={lastDateAvailable ?? ''}
       />
       <label className="text-sm flex items-center md:text-base" htmlFor="end">
         Fin :
@@ -81,16 +81,18 @@ export const SelectDate: FunctionComponent<Props> = ({
         id="end"
         name="trip-start"
         onChange={(e) => setEndDate(e.target.value)}
-        value={endDate || ''}
+        value={endDate ?? ''}
         min={LIMIT_START_DATE_DATA}
-        max={lastDateAvailable ? lastDateAvailable : ''}
+        max={lastDateAvailable ?? ''}
       />
       {/* Button */}
       <Tooltip
         text="Veuillez sélectionner une période maximale de 6 mois"
-        children={ReloadButton}
+        // children={[ReloadButton]}
         statusError={isPeriodeTooWide}
-      />
+      >
+        {ReloadButton}
+      </Tooltip>
     </div>
   );
 };

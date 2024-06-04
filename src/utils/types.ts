@@ -1,5 +1,8 @@
 export interface ChartConfiguration {
-  chart: object;
+  chart: {
+    borderRadius: number;
+    type?: string;
+  };
   title: {
     text: string;
   };
@@ -69,4 +72,10 @@ export interface Ilink {
 
 export interface ChartProps {
   config: ChartConfiguration;
+}
+
+export interface Iconsumption {
+  regionCodeISO: string;
+  consommationBruteElectriciteRte: number;
+  consommationBruteGazTotale: number;
 }

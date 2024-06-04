@@ -1,13 +1,12 @@
-import NavBar from './components/NavBar';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import dataProcessing from './utils/dataProcessing';
-import { ChartConfiguration } from './utils/types';
-import { IError } from './utils/types';
+import NavBar from './components/NavBar';
 import { SelectDate } from './components/SelectDate';
+import { dataProcessing } from './utils/dataProcessing';
+import { ChartConfiguration, IError } from './utils/types';
 
 export default function App() {
-  const [lastDateAvailable, setDateLastDateAvailable] = useState<string | null>(null);
+  const [lastDateAvailable, setLastDateAvailable] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [chartsConfig, setChartsConfig] = useState<ChartConfiguration[] | []>([]);
@@ -21,7 +20,7 @@ export default function App() {
     async function getLastDateAvailable() {
       const url = new URL(
         import.meta.env.VITE_API_URL +
-          import.meta.env.VITE_API_ENDPOINT_ECO2MIX +
+          import.meta.env.VITE_API_ENDPOINT +
           '/' +
           import.meta.env.VITE_API_PATH_LAST_RECORD
       );
@@ -41,35 +40,30 @@ export default function App() {
           text: 'Désolé, un souci est survenu. veuillez réessayer plus tard ',
         });
       } else {
-        setDateLastDateAvailable(result);
+        setLastDateAvailable(result);
         setStartDate(result);
         setEndDate(result);
         handleLoadData(result, result);
       }
     }
-    try {
-      getLastDateAvailable();
-    } catch (e) {
-      console.error(e);
-      setError({ status: true, text: 'failed fetching' });
-    }
+
+    getLastDateAvailable();
 
     return () => {
-      setDateLastDateAvailable(null);
+      setLastDateAvailable(null);
       setStartDate(null);
       setEndDate(null);
     };
   }, []);
 
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
-    // Call Api to get all data needed for charts TODO in future, retreive only chart config to avoid  frontend compute
     async function getECO2mixRealTimeData() {
       if (start != null && end != null) {
         setLoadingCharts(true);
         try {
           const url = new URL(
             import.meta.env.VITE_API_URL +
-              import.meta.env.VITE_API_ENDPOINT_ECO2MIX +
+              import.meta.env.VITE_API_ENDPOINT +
               '/' +
               import.meta.env.VITE_API_PATH_TOTAL_PRODUCTION
           );
@@ -121,76 +115,31 @@ export default function App() {
     } else {
       setError({ status: false, text: null });
 
-      try {
-        getECO2mixRealTimeData();
-      } catch (e) {
-        console.error(e);
-      }
+      getECO2mixRealTimeData();
     }
   }
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
-        <NavBar />
-        <div className=" flex flex-1 flex-col gap-5 md:gap-10 mt-4 pb-8 pr-2 pl-2 md:pr-8 md:pl-8 w-full">
-          <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl md:text-left  md:text-3xl">
-            Données éCO2mix nationales
-          </h1>
+    <div className="flex flex-col md:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
+      <NavBar />
+      <div className=" flex flex-1 flex-col gap-5 md:gap-10 mt-4 pb-8 pr-2 pl-2 md:pr-8 md:pl-8 w-full">
+        <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl md:text-left  md:text-3xl">
+          Données éCO2mix nationales
+        </h1>
 
-          {lastDateAvailable && (
-            <SelectDate
-              lastDateAvailable={lastDateAvailable}
-              handleLoadData={handleLoadData}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            />
-
-            /*     <div className="flex gap-2 justify-center align-middle md:justify-start">
-              <label className="text-sm flex items-center	 md:text-base" htmlFor="start">
-                Début :
-              </label>
-              <input
-                className="text-black rounded-md text-center w-28 md:text-base"
-                type="date"
-                id="start"
-                name="trip-start"
-                onChange={(e) => setStartDate(e.target.value)}
-                value={startDate || ''}
-                min={LIMIT_START_DATE_DATA}
-                max={lastDateAvailable}
-              />
-              <label className="text-sm flex items-center md:text-base" htmlFor="end">
-                Fin :
-              </label>
-
-              <input
-                className="text-black rounded-md text-center w-28   md:text-base"
-                type="date"
-                id="end"
-                name="trip-start"
-                onChange={(e) => setEndDate(e.target.value)}
-                value={endDate || ''}
-                min={LIMIT_START_DATE_DATA}
-                max={lastDateAvailable}
-              />
-
-              <button
-                className="bg-white text-black rounded-md w-14 sm:w-24 md:w-32 ml-2"
-                onClick={handleReloadCharts}
-              >
-                Valider
-              </button>
-            </div> */
-          )}
-          {error.status && <p className="text-red-400">{error.text}</p>}
-          {!error.status && (
-            <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />
-          )}
-        </div>
+        {lastDateAvailable && (
+          <SelectDate
+            lastDateAvailable={lastDateAvailable}
+            handleLoadData={handleLoadData}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+          />
+        )}
+        {error.status && <p className="text-red-400">{error.text}</p>}
+        {!error.status && <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />}
       </div>
-    </>
+    </div>
   );
 }

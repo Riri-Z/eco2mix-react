@@ -1,8 +1,10 @@
-import { IEco2mix, TradeItem } from './types';
-import { isRangeLongerThanTwoWeeks, timeStampTotimeStampPlusTwo } from './dateUtils';
+import frenchMap from '@highcharts/map-collection/countries/fr/fr-all.topo.json';
 import { format } from 'date-fns';
+import Highcharts from 'highcharts';
+import { isRangeLongerThanTwoWeeks, timeStampTotimeStampPlusTwo } from './dateUtils';
+import { Iconsumption, IEco2mix, TradeItem } from './types';
 
-export default function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
+export function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
     element.timeStamp = Date.parse(element.date_heure);
   }
@@ -409,4 +411,91 @@ export default function dataProcessing(values: IEco2mix[], startDate: string, en
     chartOptionsCo2Rate,
     configurationChartCommercialTrade,
   };
+}
+
+export function nationalMapConfiguration(data: Iconsumption[]) {
+  const mappedData = data.map((entry) => {
+    return {
+      'hc-key': entry.regionCodeISO,
+      electricity: entry.consommationBruteElectriciteRte,
+      gas: entry.consommationBruteGazTotale,
+      color: '#7AB2B2',
+    };
+  });
+  const chartOption = {
+    chart: {
+      renderTo: 'chart-wrapper',
+      map: frenchMap,
+      backgroundColor: null,
+      height: 600,
+      aspectRatio: 16 / 9, // Ratio 16:9
+    },
+    title: {
+      text: "Consommation quotidienne brute régionale (jusqu'en 2024-02-29)",
+      style: {
+        color: '#FFFFFF',
+      },
+    },
+    subtitle: {
+      text: 'Ce jeu de données présente la consommation régionale d’électricité (en MW) et de gaz (en MW PCS 0°C).',
+
+      style: {
+        color: '#FFFFFF',
+      },
+    },
+    mapNavigation: {
+      enabled: true,
+    },
+    tooltip: {
+      backgroundColor: '#fff',
+      borderRadius: 5,
+    },
+    colorAxis: {
+      min: 0,
+    },
+    legend: {
+      enabled: false,
+    },
+    credits: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: 'Consommation brute régionale',
+        states: {
+          hover: {
+            color: '#EEF7FF',
+          },
+        },
+        dataLabels: {
+          enabled: true,
+          format: '{point.name}',
+        },
+        allAreas: false,
+        tooltip: {
+          backgroundColor: null,
+          borderWidth: 2,
+          shadow: false,
+          useHTML: true,
+          pointFormatter: function (this: Highcharts.Point): string {
+            return (
+              '<span>' +
+              this.name +
+              '</span><br/>' +
+              'Électricité : <b>' +
+              this.electricity +
+              '</b> MW<br/>' +
+              'Gaz : <b>' +
+              this.gas +
+              '</b> MW (PCS 0°C)'
+            );
+          },
+        },
+
+        data: mappedData,
+      },
+    ],
+  };
+
+  return chartOption;
 }

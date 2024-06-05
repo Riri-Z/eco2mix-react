@@ -120,10 +120,10 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
+    <div className="flex flex-col xl:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
       <NavBar />
-      <div className=" flex flex-1 flex-col gap-5 md:gap-10 mt-4 pb-8 pr-2 pl-2 md:pr-8 md:pl-8 w-full">
-        <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl md:text-left  md:text-3xl">
+      <div className=" flex flex-1 flex-col gap-5 lg:gap-10 mt-4 pb-8 pr-2 pl-2 lg:pr-8 lg:pl-8 w-full">
+        <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl lg:text-left  lg:text-3xl">
           Données éCO2mix nationales
         </h1>
 

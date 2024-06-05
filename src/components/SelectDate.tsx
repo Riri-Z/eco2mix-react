@@ -50,19 +50,20 @@ export const SelectDate: FunctionComponent<Props> = ({
 
   const ReloadButton = (
     <button
-      className="bg-white h-full text-center text-black rounded-md w-14 sm:w-24 md:w-32 ml-2"
+      className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
       onClick={handleReloadCharts}
     >
       <p className="flex flex-col align-middle">Valider</p>
     </button>
   );
+
   return (
-    <div className="flex h-22 gap-2 justify-center align-middle md:justify-start">
-      <label className="text-sm flex items-center	 md:text-base" htmlFor="start">
+    <div className="flex h-22 gap-2 justify-center align-middle lg:justify-start">
+      <label className="text-sm flex items-center	 lg:text-base" htmlFor="start">
         Début :
       </label>
       <input
-        className="text-black rounded-md text-center w-28 md:text-base"
+        className="text-black rounded-lg text-center w-28 lg:text-base"
         type="date"
         id="start"
         name="trip-start"
@@ -71,12 +72,12 @@ export const SelectDate: FunctionComponent<Props> = ({
         min={LIMIT_START_DATE_DATA}
         max={lastDateAvailable ?? ''}
       />
-      <label className="text-sm flex items-center md:text-base" htmlFor="end">
+      <label className="text-sm flex items-center lg:text-base" htmlFor="end">
         Fin :
       </label>
 
       <input
-        className="text-black rounded-md text-center w-28   md:text-base"
+        className="text-black rounded-lg text-center w-28   lg:text-base"
         type="date"
         id="end"
         name="trip-start"
@@ -85,10 +86,8 @@ export const SelectDate: FunctionComponent<Props> = ({
         min={LIMIT_START_DATE_DATA}
         max={lastDateAvailable ?? ''}
       />
-      {/* Button */}
       <Tooltip
-        text="Veuillez sélectionner une période maximale de 6 mois"
-        // children={[ReloadButton]}
+        text="Veuillez choisir une période de six mois au maximum"
         statusError={isPeriodeTooWide}
       >
         {ReloadButton}

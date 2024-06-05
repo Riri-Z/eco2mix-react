@@ -20,7 +20,7 @@
     src: url('./assets/fonts/Quicksand/Quicksand-SemiBold.ttf') format('truetype');
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 1280px) {
   .m-active {
     border-right-color: #58e1c1;
     border-right-width: 0.2em;
@@ -28,7 +28,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1279px) {
   .m-active {
     border-bottom-color: #fff;
     border-bottom-width: 0.2em;

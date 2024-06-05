@@ -6,11 +6,11 @@ interface Props {
   statusError: boolean;
 }
 
-export const Tooltip: FunctionComponent<Props> = ({ text = 'totot', children, statusError }) => {
+export const Tooltip: FunctionComponent<Props> = ({ text = 'Error', children, statusError }) => {
   const [isVisible, setIsVisible] = useState(false);
-  console.log('statusError', statusError);
+
   return (
-    <div className="flex gap-5 relative">
+    <div className="flex gap-5 absolute lg:relative">
       <div onMouseEnter={() => setIsVisible(true)} onMouseLeave={() => setIsVisible(false)}>
         {children}
       </div>

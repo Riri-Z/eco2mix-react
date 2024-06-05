@@ -10,17 +10,19 @@ export const Tooltip: FunctionComponent<Props> = ({ text = 'Error', children, st
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <div className="flex gap-5 absolute lg:relative">
-      <div onMouseEnter={() => setIsVisible(true)} onMouseLeave={() => setIsVisible(false)}>
+    <div className="flex gap-5 relative">
+      <div
+        className="cursor-pointer"
+        onMouseEnter={() => setIsVisible(true)}
+        onMouseLeave={() => setIsVisible(false)}
+      >
         {children}
       </div>
-      {
-        <div
-          className={`${statusError ? 'bg-red-300' : 'bg-gray-300'}  text-black rounded-md pl-2 pr-2  ${statusError || isVisible ? 'opacity-100' : 'opacity-0'}`}
-        >
-          {text}
-        </div>
-      }
+      <div
+        className={`absolute left-2 xl:relative   top-9 xl:top-auto   z-10 ${statusError ? 'bg-red-300' : 'bg-gray-300'}  text-black rounded-md pl-2 pr-2  ${statusError || isVisible ? 'opacity-100' : 'opacity-0'} `}
+      >
+        {text}
+      </div>
     </div>
   );
 };

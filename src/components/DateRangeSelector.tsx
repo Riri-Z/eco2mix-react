@@ -12,7 +12,7 @@ interface Props {
   setEndDate: Dispatch<SetStateAction<string | null>>;
 }
 
-export const SelectDate: FunctionComponent<Props> = ({
+export const DateRangeSelector: FunctionComponent<Props> = ({
   lastDateAvailable,
   handleLoadData,
   startDate,
@@ -58,7 +58,7 @@ export const SelectDate: FunctionComponent<Props> = ({
   );
 
   return (
-    <div className="flex h-22 gap-2 justify-center align-middle lg:justify-start">
+    <div className="flex h-22 gap-2 justify-center align-middle xl:justify-start">
       <label className="text-sm flex items-center	 lg:text-base" htmlFor="start">
         Début :
       </label>

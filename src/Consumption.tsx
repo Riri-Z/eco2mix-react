@@ -35,12 +35,12 @@ export const Consumption = () => {
   }, []);
 
   return (
-    <div className="">
+    <>
       <HighchartsReact
         highcharts={Highcharts}
         constructorType={'mapChart'}
         options={chartOptions}
       />
-    </div>
+    </>
   );
 };

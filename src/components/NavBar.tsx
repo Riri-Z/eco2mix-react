@@ -3,23 +3,26 @@ import burgerMenuLogo from '../assets/icons/burgerMenuIcon.svg';
 import dashboardLogo from '../assets/icons/dashboardIcon.svg';
 import electricalLogo from '../assets/icons/electricalIcon.svg';
 import NavLink from './NavLink';
+import { useNavigate } from 'react-router-dom';
 
 function NavBar() {
+  const navigate = useNavigate();
+
   const LINKS = [
     { path: 'dashboard', text: 'dashboard', logo: dashboardLogo },
     {
       path: 'national-energy-consumption',
-      text: 'Carte des Consommations',
+      text: 'Consommations',
       logo: electricalLogo,
     },
   ];
 
   const [active, setActive] = useState(LINKS[0].path);
-  const [displayMenu, setDisplayMenu] = useState(false);
+  const [displayMenu, setDisplayMenu] = useState(true);
 
   useEffect(() => {
     const handleDisplayNavLinksOnResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 768) {
         setDisplayMenu(true);
       }
     };
@@ -34,7 +37,12 @@ function NavBar() {
     setDisplayMenu(!displayMenu);
   };
 
-  const displayTab = displayMenu;
+  function handleSelectLink(path: string) {
+    if (path) {
+      setActive(path);
+      navigate('/' + path);
+    }
+  }
 
   return (
     <div className="xl:w-48 flex flex-col xl:items-center bg-darkblue">
@@ -50,7 +58,7 @@ function NavBar() {
           eco2Mix
         </h1>
       </section>
-      {displayTab && (
+      {displayMenu && (
         <nav className="flex flex-row w-full justify-between xl:flex-col uppercase text-sm xl:w-full">
           <ul className="flex w-full  xl:flex-col align-middle xl:h-32 ">
             {LINKS.map((e) => (
@@ -60,7 +68,7 @@ function NavBar() {
                 text={e.text}
                 logo={e.logo}
                 active={e.path === active}
-                handleSelectedLink={setActive}
+                handleSelectedLink={handleSelectLink}
               />
             ))}
           </ul>

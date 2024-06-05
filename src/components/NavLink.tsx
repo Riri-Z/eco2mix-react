@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Ilink } from '../utils/types';
 
-function LinkComponent({ path, text, logo, active, handleSelectedLink }: Ilink) {
+function NavLink({ path, text, logo, active, handleSelectedLink }: Ilink) {
   return (
     <>
       <li
-        className={`flex justify-center md:justify-start  items-center h-10 m-auto w-full  ${active && 'm-active'}`}
+        className={`flex justify-center xl:justify-start  items-center h-10 m-auto w-full  ${active && 'm-active'}`}
       >
-        <img className="h-5 pr-2 pl-4 max-md:hidden" src={logo} alt={`${text} logo`} />
+        <img className="h-5 pr-2 pl-4 max-xl:hidden" src={logo} alt={`${text} logo`} />
         <Link
           className="font-quickSandBold text-xs"
           to={path}
@@ -20,4 +20,4 @@ function LinkComponent({ path, text, logo, active, handleSelectedLink }: Ilink) 
   );
 }
 
-export default LinkComponent;
+export default NavLink;

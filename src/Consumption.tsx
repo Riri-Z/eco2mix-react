@@ -2,15 +2,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { nationalMapConfiguration } from './utils/dataProcessing';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
+import highchartsAccessibility from 'highcharts/modules/accessibility';
 
 interface DateRange {
   startDate: string | null;
   endDate: string | null;
   currentDate: string | null;
 }
+const ERROR_MESSAGE = "Désolé, la carte n'est pas disponible pour le moment";
 
+highchartsAccessibility(Highcharts);
 // TODO  : Add loader, or something to tell  user new data is loaded
-
 export const Consumption = () => {
   const [dateRangeAvailable, setDateRangeAvailable] = useState<DateRange>({
     startDate: null,
@@ -18,6 +20,7 @@ export const Consumption = () => {
     currentDate: null,
   });
   const [data, setData] = useState([]);
+  const [error, setError] = useState({ state: false, text: '' });
 
   // Compute chartOptions whenever data change
   const chartOptions = useMemo(() => {
@@ -41,17 +44,28 @@ export const Consumption = () => {
 
     const method = 'GET';
     async function getDateRangeAvailable() {
-      const result = await (await fetch(url, { headers, method })).json();
-      if (result && result.length === 2) {
-        const startDate = result[0].date;
-        const endDate = result[1].date;
-        setDateRangeAvailable({ startDate, endDate, currentDate: endDate });
+      try {
+        const result = await (await fetch(url, { headers, method })).json();
+        if (result && result.length === 2) {
+          const startDate = result[0].date;
+          const endDate = result[1].date;
+          setDateRangeAvailable({ startDate, endDate, currentDate: endDate });
+        }
+        if (error.state) {
+          setError({ state: false, text: '' });
+        }
+      } catch (e) {
+        setError({ state: true, text: ERROR_MESSAGE });
       }
     }
     try {
       getDateRangeAvailable();
+      if (error.state) {
+        setError({ state: false, text: '' });
+      }
     } catch (e) {
       console.error(e);
+      setError({ state: true, text: ERROR_MESSAGE });
     }
   }, []);
 
@@ -80,11 +94,7 @@ export const Consumption = () => {
   // Fetch and set data
   useEffect(() => {
     if (dateRangeAvailable.currentDate != null) {
-      try {
-        getConsumption();
-      } catch (e) {
-        console.error(e);
-      }
+      getConsumption().catch((e) => console.error(e));
     }
   }, [dateRangeAvailable.currentDate]);
 
@@ -112,11 +122,15 @@ export const Consumption = () => {
           </div>
         )}
 
-      <HighchartsReact
-        highcharts={Highcharts}
-        constructorType={'mapChart'}
-        options={chartOptions}
-      />
+      {error.state ? (
+        <p className="m-auto">{error.text}</p>
+      ) : (
+        <HighchartsReact
+          highcharts={Highcharts}
+          constructorType={'mapChart'}
+          options={chartOptions}
+        />
+      )}
     </>
   );
 };

@@ -5,6 +5,9 @@ import { DateRangeSelector } from './components/DateRangeSelector';
 import { dataProcessing } from './utils/dataProcessing';
 import { ChartConfiguration, IError } from './utils/types';
 
+const ERROR_API =
+  "Désolé, le serveur n'est pas disponible actuellement, veuillez revenir plus tard";
+
 export default function App() {
   const location = useLocation();
   const { pathname } = location;
@@ -18,36 +21,7 @@ export default function App() {
     text: null,
   });
   useEffect(() => {
-    async function getLastDateAvailable() {
-      const url = new URL(
-        import.meta.env.VITE_API_URL +
-          import.meta.env.VITE_API_ENDPOINT +
-          '/' +
-          import.meta.env.VITE_API_PATH_LAST_RECORD
-      );
-      const headers = {
-        'Content-Type': 'application/json',
-      };
-      const method = 'GET';
-
-      const response = await fetch(url, {
-        method,
-        headers,
-      });
-      const result = await response.json();
-      if (response.status != 200) {
-        setError({
-          status: true,
-          text: 'Désolé, un souci est survenu. veuillez réessayer plus tard ',
-        });
-      } else {
-        setLastDateAvailable(result);
-        setStartDate(result);
-        setEndDate(result);
-        handleLoadData(result, result);
-      }
-    }
-    getLastDateAvailable();
+    getLastDateAvailable().catch(() => setError({ status: true, text: ERROR_API }));
 
     return () => {
       setLastDateAvailable(null);
@@ -55,6 +29,32 @@ export default function App() {
       setEndDate(null);
     };
   }, []);
+
+  async function getLastDateAvailable() {
+    const url = new URL(
+      import.meta.env.VITE_API_URL +
+        import.meta.env.VITE_API_ENDPOINT +
+        '/' +
+        import.meta.env.VITE_API_PATH_LAST_RECORD
+    );
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    const method = 'GET';
+
+    const response = await fetch(url, {
+      method,
+      headers,
+    });
+    await response.json().then((data) => {
+      if (response.status == 200) {
+        setLastDateAvailable(data);
+        setStartDate(data);
+        setEndDate(data);
+        handleLoadData(data, data);
+      }
+    });
+  }
 
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
     async function getECO2mixRealTimeData() {
@@ -100,7 +100,7 @@ export default function App() {
           setLoadingCharts(false);
         } catch (e) {
           console.error(e);
-          setError({ status: true, text: 'IError with API' });
+          setError({ status: true, text: ERROR_API });
         }
       }
     }
@@ -119,6 +119,9 @@ export default function App() {
     }
   }
 
+  const handleReloadPage = () => {
+    getLastDateAvailable();
+  };
   return (
     <div className="flex flex-col xl:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
       <NavBar />
@@ -138,7 +141,17 @@ export default function App() {
           />
         )}
 
-        {error.status && <p className="text-red-400">{error.text}</p>}
+        {error.status && (
+          <div className="flex">
+            <p className="text-red-400">{error.text}</p>
+            <button
+              className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
+              onClick={handleReloadPage}
+            >
+              <p className="flex flex-col align-middle">Actualiser</p>
+            </button>
+          </div>
+        )}
         {!error.status && <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />}
       </div>
     </div>

@@ -4,6 +4,11 @@ import Highcharts from 'highcharts';
 import { isRangeLongerThanTwoWeeks, timeStampTotimeStampPlusTwo } from './dateUtils';
 import { Iconsumption, IEco2mix, TradeItem } from './types';
 
+interface CustomPoint extends Highcharts.Point {
+  electricity?: number;
+  gas?: number;
+}
+
 export function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
     element.timeStamp = Date.parse(element.date_heure);
@@ -11,7 +16,7 @@ export function dataProcessing(values: IEco2mix[], startDate: string, endDate: s
   // Sort data for HighChart.js performance
   values.sort((a, b) => a.timeStamp - b.timeStamp);
 
-  /* Mix energie chart */
+  // Mix energie chart
   const seriesElictricityProduction = [
     {
       name: 'Fioul',
@@ -436,6 +441,9 @@ export function nationalMapConfiguration(data: Iconsumption[]) {
         color: '#FFFFFF',
       },
     },
+    accessibility: {
+      description: "Consommation quotidienne brute régionale (jusqu'en 2024-02-29)",
+    },
     subtitle: {
       text: 'Ce jeu de données présente la consommation régionale d’électricité (en MW) et de gaz (en MW PCS 0°C).',
 
@@ -469,7 +477,11 @@ export function nationalMapConfiguration(data: Iconsumption[]) {
         },
         dataLabels: {
           enabled: true,
-          format: '{point.name}',
+          format: '{point.name}<br>electricité:{point.electricity}<br>gaz:{point.gas}',
+          /*    style: {
+            fontSize: '10px',
+            justify:"center"
+        } */
         },
         allAreas: false,
         tooltip: {
@@ -477,7 +489,7 @@ export function nationalMapConfiguration(data: Iconsumption[]) {
           borderWidth: 2,
           shadow: false,
           useHTML: true,
-          pointFormatter: function (this: Highcharts.Point): string {
+          pointFormatter: function (this: CustomPoint): string {
             return (
               '<span>' +
               this.name +

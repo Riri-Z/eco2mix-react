@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import { DateRangeSelector } from './components/DateRangeSelector';
 import { dataProcessing } from './utils/dataProcessing';
 import { ChartConfiguration, IError } from './utils/types';
 
 export default function App() {
+  const location = useLocation();
+  const { pathname } = location;
   const [lastDateAvailable, setLastDateAvailable] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
@@ -15,7 +17,6 @@ export default function App() {
     status: false,
     text: null,
   });
-
   useEffect(() => {
     async function getLastDateAvailable() {
       const url = new URL(
@@ -46,7 +47,6 @@ export default function App() {
         handleLoadData(result, result);
       }
     }
-
     getLastDateAvailable();
 
     return () => {
@@ -127,7 +127,7 @@ export default function App() {
           Données éCO2mix nationales
         </h1>
 
-        {lastDateAvailable && (
+        {lastDateAvailable && pathname === '/dashboard' && (
           <DateRangeSelector
             lastDateAvailable={lastDateAvailable}
             handleLoadData={handleLoadData}
@@ -137,6 +137,7 @@ export default function App() {
             setEndDate={setEndDate}
           />
         )}
+
         {error.status && <p className="text-red-400">{error.text}</p>}
         {!error.status && <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />}
       </div>

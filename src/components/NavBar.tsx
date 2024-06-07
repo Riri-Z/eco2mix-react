@@ -5,9 +5,12 @@ import electricalLogo from '../assets/icons/electricalIcon.svg';
 import NavLink from './NavLink';
 import { useNavigate } from 'react-router-dom';
 
-function NavBar() {
-  const navigate = useNavigate();
+interface NavProps {
+  currentPath: string;
+}
 
+function NavBar({ currentPath }: Readonly<NavProps>) {
+  const navigate = useNavigate();
   const LINKS = [
     { path: 'dashboard', text: 'dashboard', logo: dashboardLogo },
     {
@@ -17,8 +20,14 @@ function NavBar() {
     },
   ];
 
-  const [active, setActive] = useState(LINKS[0].path);
+  const [active, setActive] = useState('');
   const [displayMenu, setDisplayMenu] = useState(true);
+
+  useEffect(() => {
+    if (currentPath) {
+      setActive(currentPath.replace('/', ''));
+    }
+  }, [currentPath]);
 
   useEffect(() => {
     const handleDisplayNavLinksOnResize = () => {
@@ -45,7 +54,7 @@ function NavBar() {
   }
 
   return (
-    <div className="xl:w-48 flex flex-col xl:items-center bg-darkblue">
+    <div className="w-full xl:w-48	 flex flex-col xl:items-center bg-darkblue">
       <section className="flex flex-row items-center h-20 ">
         <img
           className="h-5 pr-2 pl-4 mt-1 xl:hidden"
@@ -54,7 +63,7 @@ function NavBar() {
           alt="burgerMenuIcon logo"
         />
 
-        <h1 className="max-w-40 h-10 xl:h-28 flex xl:justify-center cursor-pointer  items-center font-quickSandBold text-2xl    xl:text-3xl">
+        <h1 className="w-40 h-10 xl:h-28 flex xl:justify-center cursor-pointer  items-center font-quickSandBold text-2xl    xl:text-3xl">
           eco2Mix
         </h1>
       </section>

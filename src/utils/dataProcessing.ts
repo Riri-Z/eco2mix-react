@@ -432,8 +432,8 @@ export function nationalMapConfiguration(data: Iconsumption[]) {
       renderTo: 'chart-wrapper',
       map: frenchMap,
       backgroundColor: null,
-      height: 600,
-      aspectRatio: 16 / 9, // Ratio 16:9
+      height: 550,
+      aspectRatio: 16 / 9,
     },
     title: {
       text: "Consommation quotidienne brute régionale (jusqu'en 2024-02-29)",
@@ -477,11 +477,7 @@ export function nationalMapConfiguration(data: Iconsumption[]) {
         },
         dataLabels: {
           enabled: true,
-          format: '{point.name}<br>electricité:{point.electricity}<br>gaz:{point.gas}',
-          /*    style: {
-            fontSize: '10px',
-            justify:"center"
-        } */
+          format: '{point.name}<br><b>electricité:{point.electricity}<br><b>gaz:{point.gas}',
         },
         allAreas: false,
         tooltip: {

@@ -79,3 +79,9 @@ export interface Iconsumption {
   consommationBruteElectriciteRte: number;
   consommationBruteGazTotale: number;
 }
+
+export interface DateRange {
+  startDate: string | null;
+  endDate: string | null;
+  currentDate: string | null;
+}

@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import { DateRangeSelector } from './components/DateRangeSelector';
 import { dataProcessing } from './utils/dataProcessing';
 import { ChartConfiguration, IError } from './utils/types';
+import { fetchData } from './utils/fetchData';
 
 const ERROR_API =
   "Désolé, le serveur n'est pas disponible actuellement, veuillez revenir plus tard";
 
 export default function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
   const [lastDateAvailable, setLastDateAvailable] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string | null>(null);
@@ -37,23 +39,24 @@ export default function App() {
         '/' +
         import.meta.env.VITE_API_PATH_LAST_RECORD
     );
-    const headers = {
-      'Content-Type': 'application/json',
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     };
-    const method = 'GET';
 
-    const response = await fetch(url, {
-      method,
-      headers,
-    });
-    await response.json().then((data) => {
-      if (response.status == 200) {
-        setLastDateAvailable(data);
-        setStartDate(data);
-        setEndDate(data);
-        handleLoadData(data, data);
-      }
-    });
+    //Fetch and populate state
+    fetchData({ url, options })
+      .then((data) => {
+        if (data) {
+          setLastDateAvailable(data);
+          setStartDate(data);
+          setEndDate(data);
+          handleLoadData(data, data);
+        }
+      })
+      .catch((error) => console.error('Error fetching data:', error));
   }
 
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
@@ -69,33 +72,30 @@ export default function App() {
           );
           url.searchParams.append('startDate', start);
           url.searchParams.append('endDate', end);
-          const headers = {
-            'Content-Type': 'application/json',
+          const options = {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'GET',
           };
 
-          const method = 'GET';
+          fetchData({ url, options })
+            .then((result) => {
+              const {
+                chartOptionsEco2Mix,
+                chartOptionsElectricityConsumption,
+                chartOptionsCo2Rate,
+                configurationChartCommercialTrade,
+              } = dataProcessing(result, startDate!, endDate!);
 
-          const response = await fetch(url, {
-            method,
-            headers,
-          });
-
-          const result = await response.json();
-          if (response.status === 200 && Array.isArray(result) && result.length > 0) {
-            const {
-              chartOptionsEco2Mix,
-              chartOptionsElectricityConsumption,
-              chartOptionsCo2Rate,
-              configurationChartCommercialTrade,
-            } = dataProcessing(result, startDate!, endDate!);
-
-            setChartsConfig([
-              chartOptionsEco2Mix,
-              chartOptionsElectricityConsumption,
-              chartOptionsCo2Rate,
-              configurationChartCommercialTrade,
-            ]);
-          }
+              setChartsConfig([
+                chartOptionsEco2Mix,
+                chartOptionsElectricityConsumption,
+                chartOptionsCo2Rate,
+                configurationChartCommercialTrade,
+              ]);
+            })
+            .catch((error) => console.error('Error fetching data:', error));
 
           setLoadingCharts(false);
         } catch (e) {
@@ -120,12 +120,14 @@ export default function App() {
   }
 
   const handleReloadPage = () => {
+    navigate('/');
     getLastDateAvailable();
   };
   return (
-    <div className="flex flex-col xl:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full">
-      <NavBar />
-      <div className=" flex flex-1 flex-col gap-5 lg:gap-10 mt-4 pb-8 pr-2 pl-2 lg:pr-8 lg:pl-8 w-full">
+    <div className="flex flex-col xl:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full max-y-full ">
+      <NavBar currentPath={pathname} />
+
+      <div className=" flex flex-1 flex-col gap-5 lg:gap-10 mt-4  pr-2 pl-2 lg:pr-8 lg:pl-8 w-full">
         <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl xl:text-left  lg:text-3xl">
           Données éCO2mix nationales
         </h1>

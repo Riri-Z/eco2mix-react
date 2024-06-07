@@ -45,7 +45,7 @@ Highcharts.setOptions({
   },
 });
 
-export default function Chart({ config }: ChartProps) {
+export default function Chart({ config }: Readonly<ChartProps>) {
   return (
     <div className="">
       <HighchartsReact highcharts={Highcharts} options={config} />

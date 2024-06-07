@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Iconsumption, DateRange } from './utils/types';
 import { fetchData } from './utils/fetchData';
 import { MapChart } from './components/MapChart';
+import { DateConsumption } from './components/DateConsumption';
 
 const ERROR_MESSAGE = "Désolé, la carte n'est pas disponible pour le moment";
 
@@ -104,22 +105,16 @@ export const Consumption = () => {
       {dateRangeAvailable.startDate &&
         dateRangeAvailable.endDate &&
         dateRangeAvailable.currentDate && (
-          <div className="flex row gap-2 justify-center lg:justify-start">
-            <label className="text-sm flex items-center	 lg:text-base" htmlFor="date-select">
-              Sélectionner le jour :
-            </label>
-            <input
-              id="date-select"
-              type="date"
-              className="text-black rounded-lg text-center w-28 lg:text-base"
-              onChange={handleChangeDate}
-              min={dateRangeAvailable.startDate}
-              max={dateRangeAvailable.endDate}
-              value={dateRangeAvailable.currentDate}
-            ></input>
-          </div>
+          <DateConsumption
+            currentDate={dateRangeAvailable.currentDate}
+            endDate={dateRangeAvailable.endDate}
+            startDate={dateRangeAvailable.startDate}
+            handleChangeDate={handleChangeDate}
+          />
         )}
-      <MapChart error={error} loading={loading} data={data} />
+      <div className="flex w-full justify-center">
+        <MapChart error={error} loading={loading} data={data} />
+      </div>
     </>
   );
 };

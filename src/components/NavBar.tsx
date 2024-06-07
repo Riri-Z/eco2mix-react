@@ -54,7 +54,7 @@ function NavBar({ currentPath }: Readonly<NavProps>) {
   }
 
   return (
-    <div className="w-full xl:w-48	 flex flex-col xl:items-center bg-darkblue">
+    <div className="w-full xl:w-48	flex-shrink-0  flex flex-col xl:items-center bg-darkblue">
       <section className="flex flex-row items-center h-20 ">
         <img
           className="h-5 pr-2 pl-4 mt-1 xl:hidden"
@@ -69,7 +69,7 @@ function NavBar({ currentPath }: Readonly<NavProps>) {
       </section>
       {displayMenu && (
         <nav className="flex flex-row w-full justify-between xl:flex-col uppercase text-sm xl:w-full">
-          <ul className="flex w-full  xl:flex-col align-middle xl:h-32 ">
+          <ul className="flex w-full lg:pl-4 xl:flex-col align-middle xl:h-32 ">
             {LINKS.map((e) => (
               <NavLink
                 key={e.text}

@@ -1,11 +1,13 @@
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
+import exporting from 'highcharts/modules/exporting';
 import LoadingSpinner from './LoadingSpinner';
 import highchartsAccessibility from 'highcharts/modules/accessibility';
-import { Iconsumption } from '../utils/types';
 import { useMemo } from 'react';
 import { nationalMapConfiguration } from '../utils/dataProcessing';
+import { Iconsumption } from '../utils/types';
 
+exporting(Highcharts);
 highchartsAccessibility(Highcharts);
 interface Props {
   error: {

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
-import { DateRangeSelector } from './components/DateRangeSelector';
 import { dataProcessing } from './utils/dataProcessing';
 import { ChartConfiguration, IError } from './utils/types';
 import { fetchData } from './utils/fetchData';
+import { Header } from './components/Header';
 
 const ERROR_API =
   "Désolé, le serveur n'est pas disponible actuellement, veuillez revenir plus tard";
@@ -22,6 +22,7 @@ export default function App() {
     status: false,
     text: null,
   });
+
   useEffect(() => {
     getLastDateAvailable().catch(() => setError({ status: true, text: ERROR_API }));
 
@@ -32,6 +33,7 @@ export default function App() {
     };
   }, []);
 
+  // Fetch the last available date and initialize related state variables
   async function getLastDateAvailable() {
     const url = new URL(
       import.meta.env.VITE_API_URL +
@@ -56,67 +58,72 @@ export default function App() {
           handleLoadData(data, data);
         }
       })
-      .catch((error) => console.error('Error fetching data:', error));
+      .catch((error) => {
+        setError({ status: true, text: ERROR_API });
+
+        console.error('Error fetching data:', error);
+      });
   }
 
+  // Fetch data and update the chart's state based on the selected date range
   function handleLoadData(start: string | null = startDate, end: string | null = endDate) {
-    async function getECO2mixRealTimeData() {
-      if (start != null && end != null) {
-        setLoadingCharts(true);
-        try {
-          const url = new URL(
-            import.meta.env.VITE_API_URL +
-              import.meta.env.VITE_API_ENDPOINT +
-              '/' +
-              import.meta.env.VITE_API_PATH_TOTAL_PRODUCTION
-          );
-          url.searchParams.append('startDate', start);
-          url.searchParams.append('endDate', end);
-          const options = {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'GET',
-          };
+    // Fetch ECO2mix data
+    async function fetchECO2mixRealTimeData(start: string, end: string) {
+      setLoadingCharts(true);
+      try {
+        const url = new URL(
+          import.meta.env.VITE_API_URL +
+            import.meta.env.VITE_API_ENDPOINT +
+            '/' +
+            import.meta.env.VITE_API_PATH_TOTAL_PRODUCTION
+        );
+        url.searchParams.append('startDate', start);
+        url.searchParams.append('endDate', end);
+        const options = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        };
 
-          fetchData({ url, options })
-            .then((result) => {
-              const {
-                chartOptionsEco2Mix,
-                chartOptionsElectricityConsumption,
-                chartOptionsCo2Rate,
-                configurationChartCommercialTrade,
-              } = dataProcessing(result, startDate!, endDate!);
+        const result = await fetchData({ url, options });
 
-              setChartsConfig([
-                chartOptionsEco2Mix,
-                chartOptionsElectricityConsumption,
-                chartOptionsCo2Rate,
-                configurationChartCommercialTrade,
-              ]);
-            })
-            .catch((error) => console.error('Error fetching data:', error));
+        const {
+          chartOptionsEco2Mix,
+          chartOptionsElectricityConsumption,
+          chartOptionsCo2Rate,
+          configurationChartCommercialTrade,
+        } = dataProcessing(result, start, end);
 
-          setLoadingCharts(false);
-        } catch (e) {
-          console.error(e);
-          setError({ status: true, text: ERROR_API });
-        }
+        setChartsConfig([
+          chartOptionsEco2Mix,
+          chartOptionsElectricityConsumption,
+          chartOptionsCo2Rate,
+          configurationChartCommercialTrade,
+        ]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError({ status: true, text: ERROR_API });
+      } finally {
+        setLoadingCharts(false);
       }
     }
 
-    if (end && start && end < start) {
-      const error = {
-        status: true,
-        text: 'Attention, veuillez sélectionner une date de début antérieur à la date de fin',
-      };
-
-      setError(error);
-    } else {
-      setError({ status: false, text: null });
-
-      getECO2mixRealTimeData();
-    }
+    // Validate date range and fetch data
+    const validateAndFetchData = () => {
+      if (end && start && end < start) {
+        setError({
+          status: true,
+          text: 'Attention, veuillez sélectionner une date de début antérieur à la date de fin',
+        });
+      } else {
+        setError({ status: false, text: null });
+        if (start && end) {
+          fetchECO2mixRealTimeData(start, end);
+        }
+      }
+    };
+    validateAndFetchData();
   }
 
   const handleReloadPage = () => {
@@ -131,29 +138,17 @@ export default function App() {
         <h1 className="font-quickSandSemiBold mt-2 text-center text-2xl xl:text-left  lg:text-3xl">
           Données éCO2mix nationales
         </h1>
+        <Header
+          lastDateAvailable={lastDateAvailable}
+          handleLoadData={handleLoadData}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          error={error}
+          handleReloadPage={handleReloadPage}
+        />
 
-        {lastDateAvailable && pathname === '/dashboard' && (
-          <DateRangeSelector
-            lastDateAvailable={lastDateAvailable}
-            handleLoadData={handleLoadData}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-          />
-        )}
-
-        {error.status && (
-          <div className="flex">
-            <p className="text-red-400">{error.text}</p>
-            <button
-              className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
-              onClick={handleReloadPage}
-            >
-              <p className="flex flex-col align-middle">Actualiser</p>
-            </button>
-          </div>
-        )}
         {!error.status && <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />}
       </div>
     </div>

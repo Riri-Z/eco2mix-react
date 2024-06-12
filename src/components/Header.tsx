@@ -42,12 +42,14 @@ export const Header = ({
       {error.status && (
         <div className="flex">
           <p className="text-red-400">{error.text}</p>
-          <button
-            className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
-            onClick={handleReloadPage}
-          >
-            <p className="flex flex-col align-middle">Actualiser</p>
-          </button>
+          {error.type !== 'date' && (
+            <button
+              className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
+              onClick={handleReloadPage}
+            >
+              <p className="flex flex-col align-middle">Actualiser</p>
+            </button>
+          )}
         </div>
       )}
     </>

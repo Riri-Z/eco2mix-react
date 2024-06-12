@@ -4,11 +4,11 @@ import { useRouterContext } from './utils/context';
 import { ChartConfiguration } from './utils/types';
 
 function Dashboard() {
-  const { chartsConfig, loadingCharts } = useRouterContext();
+  const { chartsConfig, loading } = useRouterContext();
 
   return (
     <>
-      {loadingCharts ? (
+      {loading ? (
         <LoadingSpinner />
       ) : (
         <div className="flex flex-col gap-1">

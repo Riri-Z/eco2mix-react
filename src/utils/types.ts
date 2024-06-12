@@ -59,6 +59,7 @@ export interface TradeItem {
 export interface IError {
   status: boolean;
   text: null | string;
+  type:string
 }
 
 export interface Ilink {

@@ -4,7 +4,7 @@ type ContextType = {
   startDate: string | null;
   endDate: string | null;
   chartsConfig: [];
-  loadingCharts: boolean;
+  loading: boolean;
 };
 
 export function useRouterContext() {

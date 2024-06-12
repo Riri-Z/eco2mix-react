@@ -410,12 +410,12 @@ export function dataProcessing(values: IEco2mix[], startDate: string, endDate: s
     },
   };
 
-  return {
+  return [
     chartOptionsEco2Mix,
     chartOptionsElectricityConsumption,
     chartOptionsCo2Rate,
     configurationChartCommercialTrade,
-  };
+  ];
 }
 
 export function nationalMapConfiguration(data: Iconsumption[]) {

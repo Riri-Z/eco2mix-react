@@ -1,13 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DateRangeSelector } from './DateRangeSelector';
 import usePathName from '../hooks/usePathName';
+import { RefetchOptions } from '@tanstack/react-query';
 
 const ERROR_API =
   "Désolé, le serveur n'est pas disponible actuellement, veuillez revenir plus tard";
 
 interface Props {
   lastDateAvailable: string | null;
-  handleLoadData: (startDate: string | null, endDate: string | null) => void;
+  handleLoadData:any /*   (options?: RefetchOptions) => Promise<QueryObserverResult<any, Error>> */;
   startDate: string | null;
   setStartDate: Dispatch<SetStateAction<string | null>>;
   endDate: string | null;

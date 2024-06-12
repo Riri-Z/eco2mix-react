@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import { dataProcessing } from './utils/dataProcessing';
 import { ChartConfiguration, IError } from './utils/types';
 import { fetchData } from './utils/fetchData';
 import { Header } from './components/Header';
+import usePathName from './hooks/usePathName';
 
 const ERROR_API =
   "Désolé, le serveur n'est pas disponible actuellement, veuillez revenir plus tard";
 
 export default function App() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { pathname } = location;
+  const pathname = usePathName().pathname;
   const [lastDateAvailable, setLastDateAvailable] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);

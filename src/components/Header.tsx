@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useLocation } from 'react-router-dom';
 import { IError } from '../utils/types';
 import { DateRangeSelector } from './DateRangeSelector';
+import usePathName from '../hooks/usePathName';
 
 interface Props {
   lastDateAvailable: string | null;
@@ -24,8 +24,7 @@ export const Header = ({
   error,
   handleReloadPage,
 }: Props) => {
-  const location = useLocation();
-  const { pathname } = location;
+  const pathname = usePathName().pathname;
 
   return (
     <>

@@ -10,7 +10,6 @@ interface Props {
   setStartDate: Dispatch<SetStateAction<string | null>>;
   setEndDate: Dispatch<SetStateAction<string | null>>;
   error: boolean;
-  handleReloadPage: () => void;
 }
 
 export const Header = ({
@@ -18,7 +17,6 @@ export const Header = ({
   setStartDate,
   setEndDate,
   error,
-  handleReloadPage,
 }: Props) => {
   const pathname = usePathName().pathname;
 
@@ -35,12 +33,6 @@ export const Header = ({
       {error && (
         <div className="flex">
           <p className="text-red-400">{ERROR_API}</p>
-          <button
-            className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
-            onClick={handleReloadPage}
-          >
-            <p className="flex flex-col align-middle">Actualiser</p>
-          </button>
         </div>
       )}
     </>

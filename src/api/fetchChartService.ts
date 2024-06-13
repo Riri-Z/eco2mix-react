@@ -22,7 +22,7 @@ async function fetchLastDateAvailable() {
 type QueryKey = [string, { startDate: string | null; endDate: string | null }];
 
 const fetchECO2mixData = async ({ queryKey }: { queryKey: QueryKey }) => {
-  const [_key, { startDate, endDate }] = queryKey;
+  const [_key, { startDate, endDate }] = queryKey; // eslint-disable-line
 
   const url = new URL(
     import.meta.env.VITE_API_URL +

@@ -5,6 +5,7 @@ import { ChartConfiguration } from './utils/types';
 
 function Dashboard() {
   const { chartsConfig, loadingCharts } = useRouterContext();
+
   const Display = () => {
     if (chartsConfig && chartsConfig.length > 0) {
       return (
@@ -25,6 +26,7 @@ function Dashboard() {
       return null;
     }
   };
+
   return <>{loadingCharts ? <LoadingSpinner /> : <Display />}</>;
 }
 export default Dashboard;

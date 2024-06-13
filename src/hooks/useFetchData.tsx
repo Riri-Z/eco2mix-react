@@ -11,11 +11,12 @@ const useFetchData = () => {
   const [chartsConfig, setChartsConfig] = useState<ChartConfiguration[]>([]);
   const [initialLoad, setInitialLoad] = useState(true);
 
+  // Fetch last date available
   const {
     isError: isErrorLastDate,
-    isSuccess: isSuccessLastDate,
     data: lastDateAvailable,
-    isLoading: isLoadingLastDate,
+    status: statusLastDateAvailble,
+    refetch: handleRefetchLastDateAvailable,
   } = useQuery({
     queryKey: ['lastDateAvailable'],
     queryFn: fetchLastDateAvailable,
@@ -28,10 +29,9 @@ const useFetchData = () => {
     refetch: handleLoadEnergyData,
   } = useQuery({
     queryKey: ['energyData', { startDate, endDate }],
-    refetchOnWindowFocus: false,
-
+    refetchOnWindowFocus: false /*
+    enabled: initialLoad, */,
     queryFn: fetchECO2mixData,
-    enabled: false,
   });
 
   useEffect(() => {
@@ -51,12 +51,13 @@ const useFetchData = () => {
     }
   }, [initialLoad, handleLoadEnergyData]);
 
+  // Init with value startDate and EndDate
   useEffect(() => {
-    if (isSuccessLastDate && lastDateAvailable) {
+    if (statusLastDateAvailble === 'success' && lastDateAvailable) {
       setStartDate(lastDateAvailable);
       setEndDate(lastDateAvailable);
     }
-  }, [isSuccessLastDate, lastDateAvailable]);
+  }, [statusLastDateAvailble, lastDateAvailable]);
 
   return {
     startDate,
@@ -68,6 +69,7 @@ const useFetchData = () => {
     handleLoadEnergyData,
     lastDateAvailable,
     isErrorLastDate,
+    handleRefetchLastDateAvailable,
   };
 };
 

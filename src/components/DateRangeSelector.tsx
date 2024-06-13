@@ -1,97 +1,51 @@
+import { format, parseISO } from 'date-fns';
+import { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
+import { DateRangePicker } from 'rsuite';
 import { LIMIT_START_DATE_DATA } from '../utils/constant';
-import { FunctionComponent, Dispatch, SetStateAction, useState } from 'react';
-import { Tooltip } from './Tooltip';
-import { compareAsc, parseISO, subMonths } from 'date-fns';
+
+const { allowedMaxDays, allowedRange, combine } = DateRangePicker;
 
 interface Props {
   lastDateAvailable: string | null;
-  handleLoadData: (startDate: string | null, endDate: string | null) => void;
-  startDate: string | null;
   setStartDate: Dispatch<SetStateAction<string | null>>;
-  endDate: string | null;
   setEndDate: Dispatch<SetStateAction<string | null>>;
 }
 
 export const DateRangeSelector: FunctionComponent<Props> = ({
   lastDateAvailable,
-  handleLoadData,
-  startDate,
   setStartDate,
-  endDate,
   setEndDate,
 }) => {
-  const [isPeriodeTooWide, setIsPeriodeTooWide] = useState(false);
+  const [rangeDateValue, setRangeDateValue] = useState<[Date, Date]>([
+    parseISO(lastDateAvailable!),
+    parseISO(lastDateAvailable!),
+  ]);
 
-  const handleReloadCharts = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    e.preventDefault();
-
-    if (startDate && endDate) {
-      if (isPeriodLongerThanSixMonths(startDate, endDate)) {
-        setIsPeriodeTooWide(false);
-        // Call to Update chart data
-        handleLoadData(startDate, endDate);
-      } else {
-        // display error on tooltip
-        setIsPeriodeTooWide(true);
-      }
+  const handleChangePeriod = (value: [Date, Date] | null, _event: React.SyntheticEvent) => {
+    // eslint-disable-line
+    if (value) {
+      setRangeDateValue(value);
+      setStartDate(format(new Date(value[0]), 'yyyy-MM-dd'));
+      setEndDate(format(new Date(value[1]), 'yyyy-MM-dd'));
     }
   };
 
-  function isPeriodLongerThanSixMonths(startDate: string, endDate: string): boolean {
-    const start = parseISO(startDate);
-    const end = parseISO(endDate);
-    const sixMonthAgo = subMonths(end, 6);
-
-    if (compareAsc(start, sixMonthAgo) === -1) {
-      return false;
-    }
-    return true;
-  }
-
-  const ReloadButton = (
-    <button
-      className="bg-white h-full text-center text-black rounded-lg w-14 sm:w-24 lg:w-32 ml-2"
-      onClick={handleReloadCharts}
-    >
-      <p className="flex flex-col align-middle">Valider</p>
-    </button>
-  );
-
   return (
-    <div className="flex h-22 gap-2 justify-center align-middle xl:justify-start">
-      <label className="text-sm flex items-center	 lg:text-base" htmlFor="start">
-        Début :
-      </label>
-      <input
-        className="text-black rounded-lg text-center w-28 lg:text-base"
-        type="date"
-        id="start"
-        name="trip-start"
-        onChange={(e) => setStartDate(e.target.value)}
-        value={startDate ?? ''}
-        min={LIMIT_START_DATE_DATA}
-        max={lastDateAvailable ?? ''}
+    <div className="flex flex-col  md:w-fit h-22 gap-2 justify-center align-middle xl:justify-start">
+      <p>Selectionner une période :</p>
+      <DateRangePicker
+        value={rangeDateValue}
+        onChange={handleChangePeriod}
+        placeholder="Selectionner une période"
+        weekStart={1}
+        // Allow selection of dates within a 3-month period
+        shouldDisableDate={combine(
+          allowedMaxDays(90),
+          allowedRange(new Date(LIMIT_START_DATE_DATA), new Date(lastDateAvailable!))
+        )}
+        editable={false}
+        ranges={[]}
       />
-      <label className="text-sm flex items-center lg:text-base" htmlFor="end">
-        Fin :
-      </label>
-
-      <input
-        className="text-black rounded-lg text-center w-28   lg:text-base"
-        type="date"
-        id="end"
-        name="trip-start"
-        onChange={(e) => setEndDate(e.target.value)}
-        value={endDate ?? ''}
-        min={LIMIT_START_DATE_DATA}
-        max={lastDateAvailable ?? ''}
-      />
-      <Tooltip
-        text="Veuillez choisir une période de six mois au maximum"
-        statusError={isPeriodeTooWide}
-      >
-        {ReloadButton}
-      </Tooltip>
     </div>
   );
 };

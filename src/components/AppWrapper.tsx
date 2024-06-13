@@ -26,7 +26,6 @@ export default function App() {
 
   return (
     <div className="flex flex-col xl:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full max-y-full ">
-
       <NavBar currentPath={pathname} />
 
       <div className=" flex flex-1 flex-col gap-5 lg:gap-10 mt-4  pr-2 pl-2 lg:pr-8 lg:pl-8 w-full">
@@ -45,9 +44,7 @@ export default function App() {
           handleReloadPage={handleReloadPage}
         />
 
-        {!isErrorLastDate && (
-          <Outlet context={{ startDate, endDate, chartsConfig, loadingCharts }} />
-        )}
+        {!isErrorLastDate && <Outlet context={{ chartsConfig, loadingCharts }} />}
       </div>
     </div>
   );

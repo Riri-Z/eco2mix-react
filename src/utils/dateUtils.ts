@@ -9,11 +9,11 @@ export function timeStampTotimeStampPlusTwo(timeStamp: number) {
 }
 
 export function isRangeLongerThanTwoWeeks(startDate: string, endDate: string) {
-  const twoWeeksAgo = subWeeks(endDate, 2);
+  const twoWeeksAgo = subWeeks(new Date(endDate), 2);
 
   // If the start date is before two weeks ago, we disable the option to export as PNG, JPEG, PDF, or SVG.
   // This prevents issues with multer, which may struggle due to excessive data.
-  if (compareAsc(startDate, twoWeeksAgo) == -1) {
+  if (compareAsc(new Date(startDate), twoWeeksAgo) == -1) {
     return EXPORT_MENU_CHARTS_FILTERED;
   }
   return EXPORT_MENU_CHARTS;

@@ -38,12 +38,15 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
         onChange={handleChangePeriod}
         placeholder="Selectionner une période"
         weekStart={1}
+        showHeader={false}
         // Allow selection of dates within a 3-month period
         shouldDisableDate={combine(
           allowedMaxDays(90),
           allowedRange(new Date(LIMIT_START_DATE_DATA), new Date(lastDateAvailable!))
         )}
+        // Disabled keyboard input
         editable={false}
+        // Remove default options
         ranges={[]}
       />
     </div>

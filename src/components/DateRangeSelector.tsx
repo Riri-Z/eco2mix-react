@@ -21,8 +21,8 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
     parseISO(lastDateAvailable!),
   ]);
 
-  const handleChangePeriod = (value: [Date, Date] | null, _event: React.SyntheticEvent) => {
-    // eslint-disable-line
+  const handleChangePeriod = (value: [Date, Date] | null, _event: React.SyntheticEvent) => {    // eslint-disable-line
+
     if (value) {
       setRangeDateValue(value);
       setStartDate(format(new Date(value[0]), 'yyyy-MM-dd'));

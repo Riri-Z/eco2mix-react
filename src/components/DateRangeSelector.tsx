@@ -21,8 +21,8 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
     parseISO(lastDateAvailable!),
   ]);
 
-  const handleChangePeriod = (value: [Date, Date] | null, _event: React.SyntheticEvent) => {    // eslint-disable-line
-
+  // eslint-disable-next-line
+  const handleChangePeriod = (value: [Date, Date] | null, _event: React.SyntheticEvent) => {
     if (value) {
       setRangeDateValue(value);
       setStartDate(format(new Date(value[0]), 'yyyy-MM-dd'));
@@ -31,11 +31,12 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
   };
 
   return (
-    <div className="flex flex-col  md:w-fit h-22 gap-2 justify-center align-middle xl:justify-start">
+    <div className="flex flex-col w-fit  md:w-fit h-22 gap-2 justify-center align-middle xl:justify-start">
       <p>Selectionner une période :</p>
       <DateRangePicker
         value={rangeDateValue}
         onChange={handleChangePeriod}
+        showOneCalendar
         placeholder="Selectionner une période"
         weekStart={1}
         showHeader={false}

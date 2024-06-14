@@ -1,21 +1,23 @@
-import useFetchData from '../hooks/useFetchData';
+import useFetchChartData from '../hooks/useFetchChartData';
 import { ChartConfiguration } from '../utils/types';
 import Chart from './Chart';
 import { DateRangeSelector } from './DateRangeSelector';
-
+import LoadingSpinner from './LoadingSpinner';
 
 function ChartContainer() {
-
   const {
     setStartDate,
     setEndDate,
     chartsConfig,
     lastDateAvailable,
-  } = useFetchData();
+    statusLastDateAvailable,
+    statusFetchingChart,
+  } = useFetchChartData();
 
   return (
     <>
-      {lastDateAvailable && (
+      {statusLastDateAvailable === 'pending' && <LoadingSpinner />}
+      {statusLastDateAvailable === 'success' && lastDateAvailable && (
         <DateRangeSelector
           lastDateAvailable={lastDateAvailable}
           setStartDate={setStartDate}
@@ -23,7 +25,7 @@ function ChartContainer() {
         />
       )}
 
-      {chartsConfig && chartsConfig.length > 0 && (
+      {statusFetchingChart === 'success' && chartsConfig && chartsConfig.length > 0 && (
         <div className="flex flex-col gap-1">
           <p className="italic text-center md:text-left font-quickSandLight text-white text-xs">
             * Si la période est supérieur à deux semaines, vous ne pourrez pas télécharger les

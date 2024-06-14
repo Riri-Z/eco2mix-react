@@ -1,4 +1,4 @@
-// Fetch the last available date and initialize related state variables
+// Fetch the last available date for charts
 async function fetchLastDateAvailable() {
   const url = new URL(
     import.meta.env.VITE_API_URL +

@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchECO2mixData, fetchLastDateAvailable } from '../api/fetchChartService';
 import { dataProcessing } from '../utils/dataProcessing';
 
-const useFetchData = () => {
+const useFetchChartData = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const [loadingCharts, setLoadingCharts] = useState(false);
   const [chartsConfig, setChartsConfig] = useState<ChartConfiguration[]>([]);
   const [initialLoad, setInitialLoad] = useState(true);
 
@@ -15,7 +14,7 @@ const useFetchData = () => {
   const {
     isError: isErrorLastDate,
     data: lastDateAvailable,
-    status: statusLastDateAvailble,
+    status: statusLastDateAvailable,
     refetch: handleRefetchLastDateAvailable,
   } = useQuery({
     queryKey: ['lastDateAvailable'],
@@ -24,19 +23,14 @@ const useFetchData = () => {
 
   /* Fetch data for charts when defaultStartDate defaultEndDate are available  */
   const {
-    isLoading,
+    status: statusFetchingChart,
     data: energyData,
     refetch: handleLoadEnergyData,
   } = useQuery({
     queryKey: ['energyData', { startDate, endDate }],
-    refetchOnWindowFocus: false /*
-    enabled: initialLoad, */,
+    refetchOnWindowFocus: false,
     queryFn: fetchECO2mixData,
   });
-
-  useEffect(() => {
-    setLoadingCharts(isLoading);
-  }, [isLoading]);
 
   useEffect(() => {
     if (energyData && startDate && endDate) {
@@ -53,18 +47,19 @@ const useFetchData = () => {
 
   // Init with value startDate and EndDate
   useEffect(() => {
-    if (statusLastDateAvailble === 'success' && lastDateAvailable) {
+    if (statusLastDateAvailable === 'success' && lastDateAvailable) {
       setStartDate(lastDateAvailable);
       setEndDate(lastDateAvailable);
     }
-  }, [statusLastDateAvailble, lastDateAvailable]);
+  }, [statusLastDateAvailable, lastDateAvailable]);
 
   return {
     startDate,
     setStartDate,
     endDate,
     setEndDate,
-    loadingCharts,
+    statusFetchingChart,
+    statusLastDateAvailable,
     chartsConfig,
     handleLoadEnergyData,
     lastDateAvailable,
@@ -73,4 +68,4 @@ const useFetchData = () => {
   };
 };
 
-export default useFetchData;
+export default useFetchChartData;

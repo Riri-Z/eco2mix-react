@@ -1,5 +1,6 @@
 /* Limite database */
-export const LIMIT_START_DATE_DATA = '2022-06-06';
+// TODO : Fetch from DBB
+export const LIMIT_START_DATE_DATA = '2023-02-01';
 
 /* Highcharts export menu */
 export const EXPORT_MENU_CHARTS = [

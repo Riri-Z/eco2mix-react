@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import useFetchData from '../hooks/useFetchData';
+import useFetchChartData from '../hooks/useFetchChartData';
 import usePathName from '../hooks/usePathName';
 import { Header } from './Header';
 import NavBar from './NavBar';
@@ -7,7 +7,7 @@ import NavBar from './NavBar';
 export default function App() {
   const pathname = usePathName().pathname;
 
-  const { isErrorLastDate } = useFetchData();
+  const { isErrorLastDate } = useFetchChartData();
 
   return (
     <div className="flex flex-col xl:flex-row w-screen min-h-screen bg-bg-dashboard text-white max-w-full max-y-full ">

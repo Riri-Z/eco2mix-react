@@ -20,9 +20,11 @@ interface Props {
 export function MapChart({ error, loading, data }: Readonly<Props>) {
   // Compute chartOptions whenever data change
   const chartOptions = useMemo(() => {
-    const options = nationalMapConfiguration(data);
+    if (!data) {
+      return [];
+    }
 
-    return options;
+    return nationalMapConfiguration(data);
   }, [data]);
 
   if (error.state) {

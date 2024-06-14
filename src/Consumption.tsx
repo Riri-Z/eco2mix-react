@@ -1,119 +1,80 @@
+import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { Iconsumption, DateRange } from './utils/types';
-import { fetchData } from './utils/fetchData';
+import { DatePicker } from 'rsuite';
+import useFetchConsumption from './hooks/useFetchConsumption';
 import { MapChart } from './components/MapChart';
-import { DateConsumption } from './components/DateConsumption';
-
-const ERROR_MESSAGE = "Désolé, la carte n'est pas disponible pour le moment";
 
 export const Consumption = () => {
-  const [dateRangeAvailable, setDateRangeAvailable] = useState<DateRange>({
-    startDate: null,
-    endDate: null,
-    currentDate: null,
-  });
-  const [data, setData] = useState<Iconsumption[]>([]);
-  const [error, setError] = useState({ state: false, text: '' });
-  const [loading, setLoading] = useState(false);
+  const [lastDateAvailable, setLastDateAvailable] = useState<Date | null>(null);
+  const [startDateAvailable, setStartDateAvailable] = useState<Date | null>(null);
 
-  // Fetch and set dateRangeAvailable
+  const {
+    minMaxDateAvailable,
+    statusLastDateAvailable,
+    fetchConsumptionData,
+    consumptionData,
+    consumptionCallStatus,
+    selectedDate,
+    setSelectedDate,
+  } = useFetchConsumption();
+
   useEffect(() => {
-    const url = new URL(
-      import.meta.env.VITE_API_URL +
-        import.meta.env.VITE_API_ENDPOINT +
-        '/' +
-        import.meta.env.VITE_API_ENDPOINT_CONSUMPTION +
-        '/' +
-        import.meta.env.VITE_API_ENDPOINT_CONSUMPTION_DATE_RANGE
-    );
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-
-    const method = 'GET';
-    const options = { headers, method };
-    async function getDateRangeAvailable() {
-      setLoading(true);
-
-      try {
-        const result = await fetchData({ url, options });
-        if (result && result.length === 2) {
-          const startDate = result[0].date;
-          const endDate = result[1].date;
-          setDateRangeAvailable({ startDate, endDate, currentDate: endDate });
-        }
-        if (error.state) {
-          setError({ state: false, text: '' });
-        }
-      } catch (e) {
-        setLoading(false);
-
-        setError({ state: true, text: ERROR_MESSAGE });
-      }
+    if (
+      statusLastDateAvailable === 'success' &&
+      minMaxDateAvailable &&
+      minMaxDateAvailable.length === 2
+    ) {
+      setSelectedDate(new Date(minMaxDateAvailable[1]?.date));
+      setLastDateAvailable(new Date(minMaxDateAvailable[1]?.date));
+      setStartDateAvailable(new Date(minMaxDateAvailable[0]?.date));
     }
-    try {
-      getDateRangeAvailable();
-      if (error.state) {
-        setError({ state: false, text: '' });
-      }
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-      setError({ state: true, text: ERROR_MESSAGE });
-    }
-  }, []);
+  }, [statusLastDateAvailable, minMaxDateAvailable]);
 
-  async function getConsumption() {
-    setLoading(true);
-
-    if (dateRangeAvailable.currentDate != null) {
-      const url = new URL(
-        import.meta.env.VITE_API_URL +
-          import.meta.env.VITE_API_ENDPOINT +
-          '/' +
-          import.meta.env.VITE_API_ENDPOINT_CONSUMPTION
-      );
-      url.searchParams.append('date', dateRangeAvailable.currentDate);
-      const headers = {
-        'Content-Type': 'application/json',
-      };
-
-      const method = 'GET';
-      const options = { headers, method };
-      const result = await fetchData({ url, options });
-      if (result && result.length > 0) {
-        setData(result);
-      }
-
-      setLoading(false);
-    }
-  }
-
-  // Fetch and set data
+  //Fetch data when update selectedDate
   useEffect(() => {
-    if (dateRangeAvailable.currentDate != null) {
-      getConsumption().catch((e) => console.error(e));
+    // change date
+    //call Api useFetchConsumption
+    if (consumptionCallStatus === 'success' && selectedDate != null) {
+      fetchConsumptionData();
     }
-  }, [dateRangeAvailable.currentDate]);
+    //
+  }, [consumptionCallStatus, selectedDate]);
 
-  function handleChangeDate(e: React.ChangeEvent<HTMLInputElement>) {
-    setDateRangeAvailable({ ...dateRangeAvailable, currentDate: e.target.value });
-  }
+  // Disable dates which are not in range minMaxDateAvailable
+  const handleDisableDate = (date: Date) => {
+    return !isWithinInterval(date, {
+      start: minMaxDateAvailable[0]?.date,
+      end: minMaxDateAvailable[1]?.date,
+    });
+  };
+
+  const isError = { state: consumptionCallStatus === 'error', text: '' };
 
   return (
     <>
-      {dateRangeAvailable.startDate &&
-        dateRangeAvailable.endDate &&
-        dateRangeAvailable.currentDate && (
-          <DateConsumption
-            currentDate={dateRangeAvailable.currentDate}
-            endDate={dateRangeAvailable.endDate}
-            startDate={dateRangeAvailable.startDate}
-            handleChangeDate={handleChangeDate}
+      {selectedDate && startDateAvailable && lastDateAvailable && (
+        <div className="flex flex-col w-fit gap-2">
+          <p>Sélectionner une date :</p>
+          <DatePicker
+            value={selectedDate}
+            // Allow selection of dates within a 3-month period
+            onChange={setSelectedDate}
+            // Disabled keyboard input
+            editable={false}
+            oneTap
+            // Remove default options
+            ranges={[]}
+            shouldDisableDate={handleDisableDate}
           />
-        )}
+        </div>
+      )}
+
       <div className="flex w-full justify-center">
-        <MapChart error={error} loading={loading} data={data} />
+        <MapChart
+          error={isError}
+          loading={consumptionCallStatus === 'pending'}
+          data={consumptionData}
+        />
       </div>
     </>
   );

@@ -6,7 +6,7 @@ import { LIMIT_START_DATE_DATA } from '../utils/constant';
 const { allowedMaxDays, allowedRange, combine } = DateRangePicker;
 
 interface Props {
-  lastDateAvailable: string | null;
+  lastDateAvailable: string;
   setStartDate: Dispatch<SetStateAction<string | null>>;
   setEndDate: Dispatch<SetStateAction<string | null>>;
 }
@@ -17,8 +17,8 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
   setEndDate,
 }) => {
   const [rangeDateValue, setRangeDateValue] = useState<[Date, Date]>([
-    parseISO(lastDateAvailable!),
-    parseISO(lastDateAvailable!),
+    parseISO(lastDateAvailable),
+    parseISO(lastDateAvailable),
   ]);
 
   // eslint-disable-next-line
@@ -38,6 +38,7 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
         onChange={handleChangePeriod}
         showOneCalendar
         placeholder="Selectionner une période"
+        format="dd-MM-yyyy"
         weekStart={1}
         showHeader={false}
         // Allow selection of dates within a 3-month period

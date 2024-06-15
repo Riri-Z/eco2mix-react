@@ -57,6 +57,7 @@ export const Consumption = () => {
           <p>Sélectionner une date :</p>
           <DatePicker
             value={selectedDate}
+            format="dd-MM-yyyy"
             // Allow selection of dates within a 3-month period
             onChange={setSelectedDate}
             // Disabled keyboard input

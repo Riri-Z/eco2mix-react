@@ -105,7 +105,7 @@ export function dataProcessing(values: IEco2mix[], startDate: string, endDate: s
       },
     },
     tooltip: {
-      xDateFormat: '%d-%m-%y-%H:%M',
+      xDateFormat: '%d-%m-%y %H:%M',
       followPointer: false,
       split: true,
     },
@@ -198,7 +198,7 @@ export function dataProcessing(values: IEco2mix[], startDate: string, endDate: s
     },
     tooltip: {
       followPointer: true,
-      xDateFormat: '%d-%m-%y-%H:%M',
+      xDateFormat: '%d-%m-%y %H:%M',
       shared: true,
     },
     plotOptions: {

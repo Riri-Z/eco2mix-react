@@ -32,7 +32,9 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
 
   return (
     <div className="flex flex-col w-fit  md:w-fit h-22 gap-2 justify-center align-middle xl:justify-start">
-      <p>Selectionner une période :</p>
+      <p>
+        Sélectionner une période<span className="pl-0.5">&#42;</span> :
+      </p>
       <DateRangePicker
         value={rangeDateValue}
         onChange={handleChangePeriod}
@@ -44,7 +46,7 @@ export const DateRangeSelector: FunctionComponent<Props> = ({
         // Allow selection of dates within a 3-month period
         shouldDisableDate={combine(
           allowedMaxDays(90),
-          allowedRange(new Date(LIMIT_START_DATE_DATA), new Date(lastDateAvailable!))
+          allowedRange(new Date(LIMIT_START_DATE_DATA), new Date(lastDateAvailable))
         )}
         // Disabled keyboard input
         editable={false}

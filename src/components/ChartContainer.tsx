@@ -16,7 +16,8 @@ function ChartContainer() {
 
   return (
     <>
-      {statusLastDateAvailable === 'pending' || statusFetchingChart === 'pending' && <LoadingSpinner />}
+      {statusLastDateAvailable === 'pending' ||
+        (statusFetchingChart === 'pending' && <LoadingSpinner />)}
       {statusLastDateAvailable === 'success' && lastDateAvailable && (
         <DateRangeSelector
           lastDateAvailable={lastDateAvailable}

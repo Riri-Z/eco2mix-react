@@ -1,5 +1,5 @@
 const ERROR_API =
-  "Désolé, le serveur n'est pas disponible actuellement, veuillez revenir plus tard";
+  "Désolé, le serveur est actuellement indisponible, veuillez revenir plus tard.";
 
 interface Props {
   error: boolean;
@@ -12,9 +12,7 @@ export const Header = ({ error }: Props) => {
         Données éCO2mix nationales
       </h1>
       {error && (
-        <div className="flex">
-          <p className="text-red-400">{ERROR_API}</p>
-        </div>
+          <p className="text-center lg:text-left text-red-400">{ERROR_API}</p>
       )}
     </>
   );

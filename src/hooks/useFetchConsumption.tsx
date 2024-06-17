@@ -14,6 +14,7 @@ const useFetchConsumption = () => {
     isError: errorFetchingMinMaxDateAvailable,
     data: minMaxDateAvailable,
     status: statusLastDateAvailable,
+    isFetching,
   } = useQuery({
     queryKey: ['minMaxDateAvailable'],
     queryFn: fetchRangeConsumptionDateAvailable,
@@ -44,7 +45,9 @@ const useFetchConsumption = () => {
     errorFetchingMinMaxDateAvailable,
     statusLastDateAvailable,
     errorFetchingdata,
+    initialLoad,
     consumptionData,
+    isFetching,
     consumptionCallStatus,
     fetchConsumptionData,
     selectedDate,

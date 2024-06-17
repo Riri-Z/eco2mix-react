@@ -16,6 +16,7 @@ const useFetchChartData = () => {
     data: lastDateAvailable,
     status: statusLastDateAvailable,
     refetch: handleRefetchLastDateAvailable,
+    isFetching,
   } = useQuery({
     queryKey: ['lastDateAvailable'],
     queryFn: fetchLastDateAvailable,
@@ -60,6 +61,7 @@ const useFetchChartData = () => {
     setEndDate,
     statusFetchingChart,
     statusLastDateAvailable,
+    isFetching,
     chartsConfig,
     handleLoadEnergyData,
     lastDateAvailable,

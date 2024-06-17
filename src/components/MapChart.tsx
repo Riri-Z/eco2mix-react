@@ -1,7 +1,6 @@
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
 import exporting from 'highcharts/modules/exporting';
-import LoadingSpinner from './LoadingSpinner';
 import highchartsAccessibility from 'highcharts/modules/accessibility';
 import { useMemo } from 'react';
 import { nationalMapConfiguration } from '../utils/dataProcessing';
@@ -27,10 +26,9 @@ interface Props {
     state: boolean;
     text: string;
   };
-  loading: boolean;
   data: Iconsumption[];
 }
-export function MapChart({ error, loading, data }: Readonly<Props>) {
+export function MapChart({ error, data }: Readonly<Props>) {
   // Compute chartOptions whenever data change
   const chartOptions = useMemo(() => {
     if (!data) {
@@ -42,16 +40,8 @@ export function MapChart({ error, loading, data }: Readonly<Props>) {
 
   if (error.state) {
     return <p className="m-auto">{error.text}</p>;
-  } else {
-    if (loading) {
-      return <LoadingSpinner />;
-    }
-    return (
-      <HighchartsReact
-        highcharts={Highcharts}
-        constructorType={'mapChart'}
-        options={chartOptions}
-      />
-    );
   }
+  return (
+    <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={chartOptions} />
+  );
 }

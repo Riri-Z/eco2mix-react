@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { DatePicker } from 'rsuite';
 import useFetchConsumption from './hooks/useFetchConsumption';
 import { MapChart } from './components/MapChart';
+import LoadingSpinner from './components/LoadingSpinner';
 
 export const Consumption = () => {
   const [lastDateAvailable, setLastDateAvailable] = useState<Date | null>(null);
@@ -13,6 +14,7 @@ export const Consumption = () => {
     statusLastDateAvailable,
     fetchConsumptionData,
     consumptionData,
+    isFetching,
     consumptionCallStatus,
     selectedDate,
     setSelectedDate,
@@ -73,15 +75,9 @@ export const Consumption = () => {
           />
         </div>
       )}
-
+      {!selectedDate || (consumptionCallStatus === 'pending' && <LoadingSpinner />)}
       <div className="flex w-full justify-center">
-        {consumptionData && (
-          <MapChart
-            error={isError}
-            loading={consumptionCallStatus === 'pending'}
-            data={consumptionData}
-          />
-        )}
+        {consumptionData && !isFetching && <MapChart error={isError} data={consumptionData} />}
       </div>
     </>
   );

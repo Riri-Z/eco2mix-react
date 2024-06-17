@@ -69,7 +69,7 @@ function NavBar({ currentPath }: Readonly<NavProps>) {
       </section>
       {displayMenu && (
         <nav className="flex flex-row w-full justify-between xl:flex-col uppercase text-sm xl:w-full">
-          <ul className="flex w-full lg:pl-4 xl:flex-col align-middle xl:h-32 ">
+          <ul className="flex w-full xl:flex-col align-middle xl:h-32 ">
             {LINKS.map((e) => (
               <NavLink
                 key={e.text}

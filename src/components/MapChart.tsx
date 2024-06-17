@@ -9,6 +9,19 @@ import { Iconsumption } from '../utils/types';
 
 exporting(Highcharts);
 highchartsAccessibility(Highcharts);
+
+Highcharts.setOptions({
+  lang: {
+    weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+    printChart: 'Imprimer',
+    viewFullscreen: 'Afficher en plein écran',
+    downloadPNG: 'Télécharger au format PNG',
+    downloadJPEG: 'Télécharger au format JPEG',
+    downloadPDF: 'Télécharger au format PDF',
+    downloadSVG: 'Télécharger au format SVG',
+  },
+});
+
 interface Props {
   error: {
     state: boolean;

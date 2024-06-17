@@ -9,7 +9,7 @@ interface CustomPoint extends Highcharts.Point {
   gas?: number;
 }
 
-export function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
+function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
     element.timeStamp = Date.parse(element.date_heure);
   }
@@ -418,7 +418,7 @@ export function dataProcessing(values: IEco2mix[], startDate: string, endDate: s
   ];
 }
 
-export function nationalMapConfiguration(data: Iconsumption[]) {
+function nationalMapConfiguration(data: Iconsumption[]) {
   const mappedData = data.map((entry) => {
     return {
       'hc-key': entry.regionCodeISO,
@@ -503,7 +503,16 @@ export function nationalMapConfiguration(data: Iconsumption[]) {
         data: mappedData,
       },
     ],
+    exporting: {
+      chartOptions: {
+        chart: {
+          backgroundColor: '#fff',
+        },
+      },
+    },
   };
 
   return chartOption;
 }
+
+export { dataProcessing, nationalMapConfiguration };

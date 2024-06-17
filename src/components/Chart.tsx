@@ -1,11 +1,11 @@
 import Highcharts from 'highcharts';
 import exporting from 'highcharts/modules/exporting';
-import accessibility from 'highcharts/modules/accessibility';
+import highchartsAccessibility from 'highcharts/modules/accessibility';
 import HighchartsReact from 'highcharts-react-official';
 import { ChartProps } from '../utils/types';
 
 exporting(Highcharts);
-accessibility(Highcharts);
+highchartsAccessibility(Highcharts);
 
 Highcharts.setOptions({
   lang: {
@@ -46,9 +46,5 @@ Highcharts.setOptions({
 });
 
 export default function Chart({ config }: Readonly<ChartProps>) {
-  return (
-    <>
-      <HighchartsReact highcharts={Highcharts} options={config} />
-    </>
-  );
+  return <HighchartsReact highcharts={Highcharts} options={config} />;
 }

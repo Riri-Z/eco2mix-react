@@ -1,5 +1,7 @@
+import { Iconsumption } from '../utils/types';
 //Consumption date
-async function fetchLastConsumptionDateAvailable() {
+
+async function fetchRangeConsumptionDateAvailable(): Promise<Iconsumption[]> {
   const url = new URL(
     import.meta.env.VITE_API_URL +
       import.meta.env.VITE_API_ENDPOINT +
@@ -8,7 +10,7 @@ async function fetchLastConsumptionDateAvailable() {
       '/' +
       import.meta.env.VITE_API_ENDPOINT_CONSUMPTION_DATE_RANGE
   );
-  const options = {
+  const options: RequestInit = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -18,7 +20,8 @@ async function fetchLastConsumptionDateAvailable() {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  return response.json();
+  const data: Iconsumption[] = await response.json();
+  return data;
 }
 
 //Consumption data
@@ -26,17 +29,18 @@ async function fetchLastConsumptionData({
   queryKey,
 }: {
   queryKey: [string, selectedDate: Date | null];
-}) {
+}): Promise<Iconsumption[]> {
   const [_key, selectedDate] = queryKey; // eslint-disable-line
-  const date = selectedDate!.toISOString().split('T')[0];
-
-  const url = new URL(
-    import.meta.env.VITE_API_URL +
-      import.meta.env.VITE_API_ENDPOINT +
-      '/' +
-      import.meta.env.VITE_API_ENDPOINT_CONSUMPTION
-  );
   if (selectedDate) {
+    const date = selectedDate.toISOString().split('T')[0];
+
+    const url = new URL(
+      import.meta.env.VITE_API_URL +
+        import.meta.env.VITE_API_ENDPOINT +
+        '/' +
+        import.meta.env.VITE_API_ENDPOINT_CONSUMPTION
+    );
+
     url.searchParams.append('date', date);
 
     const options = {
@@ -49,10 +53,11 @@ async function fetchLastConsumptionData({
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    const data: Iconsumption[] = await response.json();
+    return data;
   } else {
     throw Error('selectedDate is missing : ' + selectedDate);
   }
 }
 
-export { fetchLastConsumptionDateAvailable, fetchLastConsumptionData };
+export { fetchRangeConsumptionDateAvailable, fetchLastConsumptionData };

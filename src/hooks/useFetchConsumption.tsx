@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import {
-  fetchLastConsumptionDateAvailable,
+  fetchRangeConsumptionDateAvailable,
   fetchLastConsumptionData,
 } from '../api/fetchConsumptionService';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ const useFetchConsumption = () => {
     status: statusLastDateAvailable,
   } = useQuery({
     queryKey: ['minMaxDateAvailable'],
-    queryFn: fetchLastConsumptionDateAvailable,
+    queryFn: fetchRangeConsumptionDateAvailable,
   });
 
   // Fetch consumption data

@@ -1,5 +1,7 @@
+import { IEco2mix } from '../utils/types';
+
 // Fetch the last available date for charts
-async function fetchLastDateAvailable() {
+async function fetchLastDateAvailable(): Promise<string> {
   const url = new URL(
     import.meta.env.VITE_API_URL +
       import.meta.env.VITE_API_ENDPOINT +
@@ -21,7 +23,7 @@ async function fetchLastDateAvailable() {
 
 type QueryKey = [string, { startDate: string | null; endDate: string | null }];
 
-const fetchECO2mixData = async ({ queryKey }: { queryKey: QueryKey }) => {
+const fetchECO2mixData = async ({ queryKey }: { queryKey: QueryKey }): Promise<IEco2mix[]> => {
   const [_key, { startDate, endDate }] = queryKey; // eslint-disable-line
 
   const url = new URL(

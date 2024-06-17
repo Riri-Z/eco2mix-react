@@ -42,10 +42,14 @@ export const Consumption = () => {
 
   // Disable dates which are not in range minMaxDateAvailable
   const handleDisableDate = (date: Date) => {
-    return !isWithinInterval(date, {
-      start: minMaxDateAvailable[0]?.date,
-      end: minMaxDateAvailable[1]?.date,
-    });
+    if (startDateAvailable && lastDateAvailable) {
+      return !isWithinInterval(date, {
+        start: startDateAvailable,
+        end: lastDateAvailable,
+      });
+    } else {
+      return false;
+    }
   };
 
   const isError = { state: consumptionCallStatus === 'error', text: '' };
@@ -71,11 +75,13 @@ export const Consumption = () => {
       )}
 
       <div className="flex w-full justify-center">
-        <MapChart
-          error={isError}
-          loading={consumptionCallStatus === 'pending'}
-          data={consumptionData}
-        />
+        {consumptionData && (
+          <MapChart
+            error={isError}
+            loading={consumptionCallStatus === 'pending'}
+            data={consumptionData}
+          />
+        )}
       </div>
     </>
   );

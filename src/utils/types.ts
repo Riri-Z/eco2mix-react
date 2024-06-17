@@ -75,9 +75,16 @@ export interface ChartProps {
 }
 
 export interface Iconsumption {
-  regionCodeISO: string;
+  id: {
+    timestamp: number;
+    date: string;
+  } | null;
+  codeInseeRegion: number;
+  date: string;
+  region: string;
+  consommationBruteGazTotale?: null;
   consommationBruteElectriciteRte: number;
-  consommationBruteGazTotale: number;
+  regionCodeISO: null;
 }
 
 export interface DateRange {

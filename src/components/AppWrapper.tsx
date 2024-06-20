@@ -5,7 +5,6 @@ import { Header } from './Header';
 import NavBar from './NavBar';
 import LoadingSpinner from './LoadingSpinner';
 
-
 export default function App() {
   const pathname = usePathName().pathname;
 

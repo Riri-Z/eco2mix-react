@@ -14,11 +14,16 @@ function ChartContainer() {
     statusFetchingChart,
   } = useFetchChartData();
 
+  const shouldDisplayDateRangeSelector =
+    statusLastDateAvailable === 'success' && chartsConfig && chartsConfig.length > 0;
+
+  const shouldDisplayLoader =
+    statusLastDateAvailable === 'pending' && statusFetchingChart === 'pending';
+
   return (
     <>
-      {statusLastDateAvailable === 'pending' ||
-        (statusFetchingChart === 'pending' && <LoadingSpinner />)}
-      {statusLastDateAvailable === 'success' && lastDateAvailable && (
+      {shouldDisplayLoader && <LoadingSpinner />}
+      {shouldDisplayDateRangeSelector && lastDateAvailable && (
         <DateRangeSelector
           lastDateAvailable={lastDateAvailable}
           setStartDate={setStartDate}
@@ -26,7 +31,7 @@ function ChartContainer() {
         />
       )}
 
-      {statusFetchingChart === 'success' && chartsConfig && chartsConfig.length > 0 && (
+      {statusFetchingChart === 'success' && (
         <div className="flex flex-col gap-1">
           <p className="italic text-center md:text-left font-quickSandLight text-white text-xs">
             * Si la période est supérieur à deux semaines, vous ne pourrez pas télécharger les

@@ -1,9 +1,9 @@
 import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DatePicker } from 'rsuite';
-import useFetchConsumption from './hooks/useFetchConsumption';
-import { MapChart } from './components/MapChart';
-import LoadingSpinner from './components/LoadingSpinner';
+import useFetchConsumption from '../hooks/useFetchConsumption';
+import { MapChart } from '../components/MapChart';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export const Consumption = () => {
   const [lastDateAvailable, setLastDateAvailable] = useState<Date | null>(null);
@@ -20,22 +20,22 @@ export const Consumption = () => {
     setSelectedDate,
   } = useFetchConsumption();
 
+  // Init state from useQuery fetch
   useEffect(() => {
     if (
       statusLastDateAvailable === 'success' &&
       minMaxDateAvailable &&
       minMaxDateAvailable.length === 2
     ) {
-      setSelectedDate(new Date(minMaxDateAvailable[1]?.date));
-      setLastDateAvailable(new Date(minMaxDateAvailable[1]?.date));
-      setStartDateAvailable(new Date(minMaxDateAvailable[0]?.date));
+      const [start, end] = minMaxDateAvailable;
+      setSelectedDate(new Date(end.date));
+      setLastDateAvailable(new Date(end.date));
+      setStartDateAvailable(new Date(start.date));
     }
   }, [statusLastDateAvailable, minMaxDateAvailable]);
 
   //Fetch data when update selectedDate
   useEffect(() => {
-    // change date
-    //call Api useFetchConsumption
     if (consumptionCallStatus === 'success' && selectedDate != null) {
       fetchConsumptionData();
     }
@@ -56,9 +56,14 @@ export const Consumption = () => {
 
   const isError = { state: consumptionCallStatus === 'error', text: '' };
 
+  const shouldDisplayDate = selectedDate && startDateAvailable && lastDateAvailable;
+
+  const shouldDisplayLoader = !selectedDate || consumptionCallStatus === 'pending';
+
+  const shouldDisplayConsumptionMap = consumptionData && !isFetching;
   return (
     <>
-      {selectedDate && startDateAvailable && lastDateAvailable && (
+      {shouldDisplayDate && (
         <div className="flex flex-col w-fit gap-2">
           <p>Sélectionner une date :</p>
           <DatePicker
@@ -75,9 +80,11 @@ export const Consumption = () => {
           />
         </div>
       )}
-      {!selectedDate || (consumptionCallStatus === 'pending' && <LoadingSpinner />)}
+
+      {shouldDisplayLoader && <LoadingSpinner />}
+
       <div className="flex w-full justify-center">
-        {consumptionData && !isFetching && <MapChart error={isError} data={consumptionData} />}
+        {shouldDisplayConsumptionMap && <MapChart error={isError} data={consumptionData} />}
       </div>
     </>
   );

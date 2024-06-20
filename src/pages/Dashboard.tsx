@@ -1,4 +1,4 @@
-import ChartContainer from './components/ChartContainer';
+import ChartContainer from '../components/ChartContainer';
 
 function Dashboard() {
   return <ChartContainer />;

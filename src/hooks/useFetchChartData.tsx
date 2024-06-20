@@ -34,6 +34,7 @@ const useFetchChartData = () => {
   });
 
   useEffect(() => {
+    console.log('called', energyData);
     if (energyData && startDate && endDate) {
       setChartsConfig(dataProcessing(energyData, startDate, endDate));
     }

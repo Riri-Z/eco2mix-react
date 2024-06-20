@@ -1,7 +1,7 @@
 import { Iconsumption } from '../utils/types';
 //Consumption date
 
-async function fetchRangeConsumptionDateAvailable(): Promise<Iconsumption[]> {
+async function fetchRangeConsumptionDateAvailable(): Promise<[Iconsumption, Iconsumption]> {
   const url = new URL(
     import.meta.env.VITE_API_URL +
       import.meta.env.VITE_API_ENDPOINT +
@@ -20,7 +20,7 @@ async function fetchRangeConsumptionDateAvailable(): Promise<Iconsumption[]> {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  const data: Iconsumption[] = await response.json();
+  const data: [Iconsumption, Iconsumption] = await response.json();
   return data;
 }
 

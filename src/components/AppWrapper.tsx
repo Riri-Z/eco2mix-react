@@ -5,7 +5,7 @@ import { Header } from './Header';
 import NavBar from './NavBar';
 import LoadingSpinner from './LoadingSpinner';
 
-export default function App() {
+export default function AppWrapper() {
   const pathname = usePathName().pathname;
 
   const { isErrorLastDate, isFetching } = useFetchChartData();

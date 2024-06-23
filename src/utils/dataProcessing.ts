@@ -8,7 +8,7 @@ interface CustomPoint extends Highcharts.Point {
   electricity?: number;
   gas?: number;
 }
-
+// Function to compute data from API to highcharts.js config
 function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
     element.timeStamp = Date.parse(element.date_heure);
@@ -105,7 +105,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
       },
     },
     tooltip: {
-      xDateFormat: '%d-%m-%y %H:%M',
+      xDateFormat: '%d-%m-%y, %H:%M',
       followPointer: false,
       split: true,
     },
@@ -198,7 +198,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
     tooltip: {
       followPointer: true,
-      xDateFormat: '%d-%m-%y %H:%M',
+      xDateFormat: '%d-%m-%y, %H:%M',
       shared: true,
     },
     plotOptions: {
@@ -261,7 +261,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
       },
     },
     tooltip: {
-      xDateFormat: '%d-%m-%y %H:%M',
+      xDateFormat: '%d-%m-%y, %H:%M',
       followPointer: true,
       shared: true,
     },

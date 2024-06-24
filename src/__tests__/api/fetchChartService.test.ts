@@ -1,11 +1,11 @@
-import { describe, expect, vi, it, beforeEach } from 'vitest';
-import { fetchLastDateAvailable } from '../../api/fetchChartService';
+import { describe, expect, vi, it, beforeEach, Mock } from 'vitest';
+import { fetchLastDateAvailable, fetchECO2mixData } from '../../api/fetchChartService';
 
 // Mock global.fetch
 global.fetch = vi.fn();
 
 // Helper function to create a mock fetch response
-function createFetchResponse(data: string) {
+function createFetchResponse(data: string | []) {
   return {
     ok: true,
     json: () => Promise.resolve(data),
@@ -29,9 +29,9 @@ describe('fetchLastDateAvailable', () => {
   });
 
   it('should make a GET request to fetch the last date available and return the result', async () => {
-    const lastDateResponse = '2024-06-24';
+    const mockLastDateResponse = '2024-06-24';
 
-    (global.fetch as vi.Mock).mockResolvedValue(createFetchResponse(lastDateResponse));
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(mockLastDateResponse));
 
     const result = await fetchLastDateAvailable();
 
@@ -45,15 +45,29 @@ describe('fetchLastDateAvailable', () => {
         'Content-Type': 'application/json',
       },
     });
-    expect(result).toEqual(lastDateResponse);
+    expect(result).toEqual(mockLastDateResponse);
   });
 
   it('should throw an error when the network response is not ok', async () => {
-    (global.fetch as vi.Mock).mockResolvedValue({
+    (global.fetch as Mock).mockResolvedValue({
       ok: false,
       json: () => Promise.resolve(null),
     });
 
     await expect(fetchLastDateAvailable()).rejects.toThrow('Network response was not ok');
+  });
+
+  it('should make a GET request to  fetchECO2mixData', async () => {
+    const expectedResult: [] = [];
+
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(expectedResult));
+
+    const query: { queryKey: [string, { startDate: string; endDate: string }] } = {
+      queryKey: ['fakeKey', { startDate: '2024-09-23', endDate: '2024-09-24' }],
+    };
+
+    const result = await fetchECO2mixData(query);
+
+    expect(expectedResult).toEqual(result);
   });
 });

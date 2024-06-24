@@ -79,12 +79,12 @@ export interface Iconsumption {
     timestamp: number;
     date: string;
   } | null;
-  codeInseeRegion: number;
-  date: string;
+  codeInseeRegion: string;
+  date: null;
   region: string;
-  consommationBruteGazTotale?: null;
+  consommationBruteGazTotale?: number;
   consommationBruteElectriciteRte: number;
-  regionCodeISO: null;
+  regionCodeISO: string;
 }
 
 export interface DateRange {

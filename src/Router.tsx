@@ -22,6 +22,11 @@ const Router = createBrowserRouter([
         path: '/national-energy-consumption',
         element: <Consumption />,
       },
+      {
+        path: '*',
+        element: <ErrorPage />,
+      },
+
     ],
   },
 ]);

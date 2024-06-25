@@ -1,13 +1,7 @@
-import frenchMap from '@highcharts/map-collection/countries/fr/fr-all.topo.json';
 import { format } from 'date-fns';
-import Highcharts from 'highcharts';
 import { isRangeLongerThanTwoWeeks, timeStampTotimeStampPlusTwo } from './dateUtils';
-import { Iconsumption, IEco2mix, TradeItem } from './types';
+import { IEco2mix, TradeItem } from './types';
 
-interface CustomPoint extends Highcharts.Point {
-  electricity?: number;
-  gas?: number;
-}
 // Function to compute data from API to highcharts.js config
 function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) {
   for (const element of values) {
@@ -16,7 +10,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
   // Sort data for HighChart.js performance
   values.sort((a, b) => a.timeStamp - b.timeStamp);
 
-  // Mix energie chart
+  // Series for production of electricity by branch
   const seriesElictricityProduction = [
     {
       name: 'Fioul',
@@ -79,7 +73,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
       ]),
     },
   ];
-
+  // Configuration for chart depicting the production of electricity by branch
   const chartOptionsEco2Mix = {
     chart: {
       borderRadius: 20,
@@ -95,7 +89,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
     yAxis: {
       title: {
-        text: ' Mégawattheures (MWh)',
+        text: 'Mégawattheures (MWh)',
       },
     },
     xAxis: {
@@ -134,7 +128,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
   };
 
-  /* Electricity consumption chart */
+  // Series for electricity consumption
   const seriesElectricityConsumption = [
     {
       name: 'Consommation',
@@ -159,6 +153,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
   ];
 
+  // Configuration for chart depicting the consumption of electricity
   const chartOptionsElectricityConsumption = {
     chart: {
       borderRadius: 20,
@@ -224,7 +219,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
   };
 
-  /* Co2 rate chart */
+  // Series for C02 emission chart
   const seriesCo2Rate = [
     {
       name: 'Taux de Co2',
@@ -236,6 +231,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
   ];
 
+  // Configuration for chart depicting the C02 emission rate
   const chartOptionsCo2Rate = {
     chart: {
       borderRadius: 20,
@@ -285,11 +281,12 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
   };
 
-  /* Trade chart */
+  // Categories for trade Chart
   const categories = values.map((item: IEco2mix) => {
     return format(Date.parse(item.date_heure), 'dd-MM');
   });
 
+  // xAxis for trade Chart
   const xAxis = {
     categories: [...new Set(categories)],
     accessibility: {
@@ -307,6 +304,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
   const aggregatedData: TradeItem[] = [];
 
   values.forEach((item: IEco2mix) => {
+    // Destructuring item to keep the needed properties
     const {
       date,
       ech_comm_angleterre,
@@ -316,8 +314,11 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
       ech_comm_allemagne_belgique,
     } = item;
 
+    // Function wich allow to find element in aggregatedDate based on date
     const index = aggregatedData.findIndex((e: { date: string }) => e.date === date);
-    if (index == -1) {
+
+    // If item isn't in aggregatedDate we push it into aggregatedData
+    if (index === -1) {
       const newItem = {
         date,
         ech_comm_angleterre,
@@ -339,6 +340,7 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     };
 
     // Compute each values properties
+    // to have the sum for each properties in aggregatedData
     for (const key in tradeProperties) {
       if (
         key !== 'date' &&
@@ -373,6 +375,8 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
     },
     []
   );
+
+  // Configuration for chart depicting commercial trade
   const configurationChartCommercialTrade = {
     chart: {
       borderRadius: 20,
@@ -418,101 +422,4 @@ function dataProcessing(values: IEco2mix[], startDate: string, endDate: string) 
   ];
 }
 
-function nationalMapConfiguration(data: Iconsumption[]) {
-  const mappedData = data.map((entry) => {
-    return {
-      'hc-key': entry.regionCodeISO,
-      electricity: entry.consommationBruteElectriciteRte,
-      gas: entry.consommationBruteGazTotale,
-      color: '#7AB2B2',
-    };
-  });
-  const chartOption = {
-    chart: {
-      renderTo: 'chart-wrapper',
-      map: frenchMap,
-      backgroundColor: null,
-      height: 550,
-      aspectRatio: 16 / 9,
-    },
-    title: {
-      text: "Consommation quotidienne brute régionale (jusqu'en 2024-02-29)",
-      style: {
-        color: '#FFFFFF',
-      },
-    },
-    accessibility: {
-      description: "Consommation quotidienne brute régionale (jusqu'en 2024-02-29)",
-    },
-    subtitle: {
-      text: 'Ce jeu de données présente la consommation régionale d’électricité (en MW) et de gaz (en MW PCS 0°C).',
-
-      style: {
-        color: '#FFFFFF',
-      },
-    },
-    mapNavigation: {
-      enabled: true,
-    },
-    tooltip: {
-      backgroundColor: '#fff',
-      borderRadius: 5,
-    },
-    colorAxis: {
-      min: 0,
-    },
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
-    series: [
-      {
-        name: 'Consommation brute régionale',
-        states: {
-          hover: {
-            color: '#EEF7FF',
-          },
-        },
-        dataLabels: {
-          enabled: true,
-          format: '{point.name}<br><b>electricité:{point.electricity}<br><b>gaz:{point.gas}',
-        },
-        allAreas: false,
-        tooltip: {
-          backgroundColor: null,
-          borderWidth: 2,
-          shadow: false,
-          useHTML: true,
-          pointFormatter: function (this: CustomPoint): string {
-            return (
-              '<span>' +
-              this.name +
-              '</span><br/>' +
-              'Électricité : <b>' +
-              this.electricity +
-              '</b> MW<br/>' +
-              'Gaz : <b>' +
-              this.gas +
-              '</b> MW (PCS 0°C)'
-            );
-          },
-        },
-
-        data: mappedData,
-      },
-    ],
-    exporting: {
-      chartOptions: {
-        chart: {
-          backgroundColor: '#fff',
-        },
-      },
-    },
-  };
-
-  return chartOption;
-}
-
-export { dataProcessing, nationalMapConfiguration };
+export { dataProcessing };

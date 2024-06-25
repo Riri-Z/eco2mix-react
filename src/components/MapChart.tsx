@@ -3,7 +3,7 @@ import Highcharts from 'highcharts/highmaps';
 import exporting from 'highcharts/modules/exporting';
 import highchartsAccessibility from 'highcharts/modules/accessibility';
 import { useMemo } from 'react';
-import { nationalMapConfiguration } from '../utils/dataProcessing';
+import { frenchMapConfiguration } from '../utils/frenchMapConfiguration';
 import { Iconsumption } from '../utils/types';
 
 exporting(Highcharts);
@@ -35,7 +35,7 @@ export function MapChart({ error, data }: Readonly<Props>) {
       return [];
     }
 
-    return nationalMapConfiguration(data);
+    return frenchMapConfiguration(data);
   }, [data]);
 
   if (error.state) {

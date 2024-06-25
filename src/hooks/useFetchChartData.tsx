@@ -22,7 +22,7 @@ const useFetchChartData = () => {
     queryFn: fetchLastDateAvailable,
   });
 
-  /* Fetch data for charts when defaultStartDate defaultEndDate are available  */
+  // Fetch data for charts when defaultStartDate defaultEndDate are available
   const {
     status: statusFetchingChart,
     data: energyData,
@@ -33,13 +33,15 @@ const useFetchChartData = () => {
     queryFn: fetchECO2mixData,
   });
 
+  // When lastDateAvailable we set startDate and EndDate
   useEffect(() => {
-    console.log('called', energyData);
-    if (energyData && startDate && endDate) {
-      setChartsConfig(dataProcessing(energyData, startDate, endDate));
+    if (statusLastDateAvailable === 'success' && lastDateAvailable) {
+      setStartDate(lastDateAvailable);
+      setEndDate(lastDateAvailable);
     }
-  }, [energyData]);
+  }, [statusLastDateAvailable, lastDateAvailable]);
 
+  // Fetch data when component is mount, et start && endDate are set
   useEffect(() => {
     if (startDate && endDate && initialLoad) {
       handleLoadEnergyData();
@@ -47,13 +49,12 @@ const useFetchChartData = () => {
     }
   }, [initialLoad, handleLoadEnergyData]);
 
-  // Init with value startDate and EndDate
+  // Set Charts configuration when energy data are available
   useEffect(() => {
-    if (statusLastDateAvailable === 'success' && lastDateAvailable) {
-      setStartDate(lastDateAvailable);
-      setEndDate(lastDateAvailable);
+    if (energyData && startDate && endDate) {
+      setChartsConfig(dataProcessing(energyData, startDate, endDate));
     }
-  }, [statusLastDateAvailable, lastDateAvailable]);
+  }, [energyData]);
 
   return {
     startDate,

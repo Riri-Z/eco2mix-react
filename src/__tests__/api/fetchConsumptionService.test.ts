@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { fetchLastConsumptionData,fetchRangeConsumptionDateAvailable } from '../../api/fetchConsumptionService';
 import { Iconsumption } from '../../utils/types';
 
-const fetch = vi.fn();
+global.fetch = vi.fn();
 
 const expectedResult = [
   {
@@ -166,7 +166,7 @@ describe('fetchLastConsumptionData', () => {
   });
 
   it('should make a Get request to fetch, and return array of  energy', async () => {
-    fetch.mockResolvedValue(createFetchResponse(mockResult));
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(mockResult));
 
     const params: { queryKey: [string, Date] } = { queryKey: ['fakeKey', new Date('2024-02-21')] };
     const result = await fetchLastConsumptionData(params);
@@ -183,6 +183,7 @@ describe('fetchRangeConsumptionDateAvailable', ()=> {
     VITE_API_URL: 'http://localhost:8080',
     VITE_API_ENDPOINT: '/api',
     VITE_API_ENDPOINT_CONSUMPTION: 'consumption',
+    VITE_API_ENDPOINT_CONSUMPTION_DATE_RANGE: "date-range-available",
   };
 
   beforeEach(() => {
@@ -197,10 +198,20 @@ describe('fetchRangeConsumptionDateAvailable', ()=> {
   it('should make a Get request to fetch, and return array of  energy', async () => {
 
 
-    fetch.mockResolvedValue(createFetchResponse(expectedResult));
+    (global.fetch as Mock).mockResolvedValue(createFetchResponse(expectedResult));
 
     const result = await fetchRangeConsumptionDateAvailable();
 
+    const expectedUrl = new URL(
+      `${mockEnv.VITE_API_URL}${mockEnv.VITE_API_ENDPOINT}/${mockEnv.VITE_API_ENDPOINT_CONSUMPTION}/${mockEnv.VITE_API_ENDPOINT_CONSUMPTION_DATE_RANGE}`
+    );
+
+    expect(global.fetch).toHaveBeenCalledWith(expectedUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     expect(result).toEqual(expectedResult);
   });
 })

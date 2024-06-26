@@ -5,7 +5,7 @@ import useFetchConsumption from '../hooks/useFetchConsumption';
 import { MapChart } from '../components/MapChart';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-export const Consumption = () => {
+const Consumption: React.FC = () => {
   const [lastDateAvailable, setLastDateAvailable] = useState<Date | null>(null);
   const [startDateAvailable, setStartDateAvailable] = useState<Date | null>(null);
 
@@ -19,7 +19,6 @@ export const Consumption = () => {
     selectedDate,
     setSelectedDate,
   } = useFetchConsumption();
-
   // Init state from useQuery fetch
   useEffect(() => {
     if (
@@ -28,9 +27,11 @@ export const Consumption = () => {
       minMaxDateAvailable.length === 2
     ) {
       const [start, end] = minMaxDateAvailable;
-      setSelectedDate(new Date(end.date));
-      setLastDateAvailable(new Date(end.date));
-      setStartDateAvailable(new Date(start.date));
+      if (start.date && end.date) {
+        setSelectedDate(new Date(end.date));
+        setLastDateAvailable(new Date(end.date));
+        setStartDateAvailable(new Date(start.date));
+      }
     }
   }, [statusLastDateAvailable, minMaxDateAvailable]);
 
@@ -54,12 +55,16 @@ export const Consumption = () => {
     }
   };
 
-  const isError = { state: consumptionCallStatus === 'error', text: '' };
+  // Condition to display error status
+  const isError = { state: consumptionCallStatus === 'error', text: 'Erreur de chargement des données' };
 
+  // Condition to display date picker
   const shouldDisplayDate = selectedDate && startDateAvailable && lastDateAvailable;
 
+  // Condition to display the loader
   const shouldDisplayLoader = !selectedDate || consumptionCallStatus === 'pending';
 
+  // Condition to display map
   const shouldDisplayConsumptionMap = consumptionData && !isFetching;
   return (
     <>
@@ -89,3 +94,5 @@ export const Consumption = () => {
     </>
   );
 };
+
+export default Consumption;

@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import ErrorPage from './error-page';
 import App from './App';
-import { Consumption } from './pages/Consumption';
+import Consumption  from './pages/Consumption';
 
 const Router = createBrowserRouter([
   {

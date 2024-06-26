@@ -11,7 +11,6 @@ describe('render', () => {
       </MemoryRouter>
     );
     const titleElement = getByText('Données éCO2mix nationales');
-    expect(true).toBeTruthy();
     expect(titleElement).toBeInTheDocument();
   });
 });

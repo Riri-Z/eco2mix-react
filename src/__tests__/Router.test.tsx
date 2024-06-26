@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import App from '../App';
 import ErrorPage from '../error-page';
 import Dashboard from '../pages/Dashboard';
-import { Consumption } from '../pages/Consumption';
+import  Consumption  from '../pages/Consumption';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('Router test link and redirection', () => {
